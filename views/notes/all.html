@@ -1,0 +1,51 @@
+#{extends '/template_page.html' /}
+#{set title:'Mail App' /}
+
+<script type="text/javascript" src="/dist/lib/http.js"></script>
+<script type="text/javascript" src="/dist/lib/jsonrpc.js"></script>
+<script type="text/javascript"></script>
+
+
+<div class="row">
+
+  <div class="col-md-3 hidden-xs hidden-sm">
+    <ul class="nav nav-default nav-stacked nav-pills">
+      <li><a href="#"><h3>SmokeOs</h3></a><li>
+      <li class="active"><a href="/smoke-os/index.html"><i class="glyphicon glyphicon-th-list"></i> Projects</a></li>
+      <li><hr/></li>
+      <li><small style="color:#c2c2c2">...</small>
+    </ul>
+  </div>
+
+  <div class="col-md-9">
+
+    <div class="row">
+
+      <div class="col-md-12">
+        <h2>Axml</h2>
+        <img src="https://img.shields.io/npm/v/axml.svg" />
+        <img src="https://img.shields.io/npm/dm/axml.svg" />
+        <img src="https://img.shields.io/travis/AxFab/axml.svg" />
+        <img src="https://img.shields.io/coveralls/axfab/axml.svg" />
+        <p class="lead">Node.js package, Xml Parser - convert Xml to JsonML.</p>
+        <p>This small js library have been build to parse XML. Most of xml library I study in Js is loosing some precious informations (children order, blank text).</p>
+        <p>I decided to create my own XML parser which, by default provide JsonML object but can also be override to build a custom document</p>
+
+      </div>
+
+      <div class="col-md-12">
+        <h2>Html-Markup</h2>
+        <img src="https://img.shields.io/npm/v/html-markup.svg" />
+        <img src="https://img.shields.io/npm/dm/html-markup.svg" />
+        <img src="https://img.shields.io/travis/AxFab/html-markup.svg" />
+        <img src="https://img.shields.io/coveralls/axfab/html-markup.svg" />
+        <p class="lead">Node.js package, Html template engine.</p>
+        <p>This is an engine that define a new HTML template language. The language used is strongly base on the one used on the first iteration of the play framework.</p>
+        <p>This lanaguage is far from the best available but I designed it because I needed file inclusion.</p>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+

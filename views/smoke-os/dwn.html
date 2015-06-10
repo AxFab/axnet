@@ -1,0 +1,45 @@
+#{extends '/template_page.html' /}
+#{set title:'SmokeOS kernel' /}
+#{set menu:'download' /}
+
+<script type="text/javascript" src="/dist/lib/http.js"></script>
+<script type="text/javascript" src="/dist/lib/jsonrpc.js"></script>
+<script type="text/javascript"></script>
+
+
+<div class="row">
+
+#{include '/smoke-os/menu.html' /}
+
+  <div class="col-md-10">
+
+
+    <div class="row">
+
+      <div class="col-md-12">
+        <h2>Download</h2>
+        <p>At this moment the only delivery I provide is the small ISO image for x86 platform. Even if no persistant code are written yet. I strongly recommand to launch SmokeOS on sand boxing, like using <a href="https://www.virtualbox.org/">Virtual Box</a>.</p>
+
+        <p>If your interested by the source of the operating system, all is on <a href="https://github.com/AxFab/">my Github</a>.<br/>
+          The <a href="https://github.com/AxFab/kernel">kernel</a> and the <a href="https://github.com/AxFab/smoke-os">distribution</a> are on seperated repositories.</p>
+
+        <h3>Release v0.1 - unstable</h3>
+        <table class="table">
+          <tr>
+            <th>Architecture</th>
+            <th>Format</th>
+            <th>Notes</th>
+          </tr>
+          <tr>
+            <td>x86</td>
+            <td><a href="" class="btn btn-success btn-sm">OsCore.iso</a></td>
+            <td>No real interest yet :/</td>
+          </tr>
+        </table>
+      </div>
+ 
+    </div>
+
+  </div>
+</div>
+

@@ -1,0 +1,264 @@
+#{extends '/template_page.html' /}
+#{set title:'Mail App' /}
+
+<script type="text/javascript" src="/node_modules/bigint/BigInt.js"></script>
+<script type="text/javascript" src="/node_modules/jrpc/http.js"></script>
+<script type="text/javascript" src="/node_modules/jrpc/jsonrpc.js"></script>
+<script type="text/javascript" src="/dist/js/sha.js"></script>
+<script type="text/javascript">
+
+
+  var MailApp = function () 
+  {
+    var self = this
+    document.getElementById('view-list').style.display = 'none'
+    document.getElementById('fh_l').value = 'fabien'
+    document.getElementById('fh_submit').onclick = function () {
+      self.clickConnect()
+      return false
+    }
+  }
+
+  MailApp.prototype.switchView = function (view, param) 
+  {
+    var self = this
+    document.getElementById('view-home').style.display = 'none'
+    document.getElementById('view-list').style.display = 'block'
+
+    var n = self.info.folders.length
+    for (var i = 0; i < n; ++i)
+      MailApp.AddFolder(self.info.folders[i])
+
+    if (view == 'list') 
+      self.srvc.invoke('readdir', [param], function (err, res) {
+        if (err) {
+          document.getElementById('sh_err').textContent = err.message
+          return
+        }
+
+        self.info.folder = res.name
+        self.info.mails = res.mails
+        self.info.folder = param
+
+        var n = self.info.mails.length
+        for (var i = 0; i < n; ++i)
+          MailApp.AddMessageLine(self.info.mails[i])
+
+      })
+  }
+
+  MailApp.prototype.clickConnect = function ()
+  {
+    var self = this
+    self.srvc = jsonrpc()
+    var username = document.getElementById('fh_l').value
+    self.srvc.setHeader('auth-username', username)
+    self.srvc.invoke('connect', [], function (err, res) {
+      if (err) {
+        document.getElementById('fh_err').textContent = err.message
+        return
+      }
+
+      var lg = 512, sg = 256
+      var passwd = document.getElementById('fh_s').value
+      var shaObj = new jsSHA(passwd, "TEXT");
+      passwd = shaObj.getHash("SHA-512", "B64");
+      // console.log ('SHA-512', passwd)
+      // passwd = '2gIIsAxRNuICiiSD_4SY6wGSWd68CvSxvRjUvztnScPu_xulkte3qYAf0eH1kU8oVcl1QGyLgselcZXl2ACHhd'
+      passwd = BigInt.str2bigInt(passwd, 64, lg)
+      var once = BigInt.str2bigInt(res.once, 64, sg)
+      var modulus = BigInt.str2bigInt(res.modulus, 64, lg)
+      var sToken = BigInt.powMod(passwd, once, modulus)
+      self.srvc.setHeader('auth-security-token', BigInt.bigInt2str(sToken, 64))
+      self.srvc.invoke('index', [BigInt.bigInt2str(sToken, 64)], function (err, res) {
+        // console.log ('username', username, err, res)
+        if (err) {
+          document.getElementById('fh_err').textContent = err.message
+          return
+        }
+
+        self.info = res
+        self.switchView('list', 'inbox')
+
+
+      })
+    })
+  }
+
+  var I18n = {}
+
+  I18n.en_US = {
+    Month: ['January', 'Febrary', 'March', 'April', 'May', 'June', 
+      'July', 'August', 'September', 'October', 'November', 'December' ]
+  }
+
+
+  MailApp.AddFolder = function (folder) {
+    var xTbl = document.getElementById('mailapp-flist')
+    var xLi = document.createElement('li')
+    if (folder.unread > 0)
+      xLi.innerHTML = '<a href="#">'+folder.name+' <span class="badge">'+folder.unread+'</span></a>'
+    else
+      xLi.innerHTML = '<a href="#">'+folder.name+'</a>'
+
+    xTbl.appendChild (xLi)
+    //  <li><a href="#">Important <span class="badge">1</span></a></li>
+  }
+
+  MailApp.AddMessageLine = function (message) {
+    var xTbl = document.getElementById('mailapp-mtable')
+    var xTr = document.createElement('tr')
+    xTr.style.whiteSpace = 'nowrap'
+
+    var xTd1 = document.createElement('td')
+    xTd1.innerHTML = '<input type="checkbox" /> <img src="" style="width:16px;height:16px" /> <img src="" style="width:16px;height:16px" />'
+
+    var xTd2 = document.createElement('td')
+    var xN = document.createElement('span')
+    var xP = document.createElement('b')
+    var xE = document.createElement('em')
+    xTd2.appendChild(xN)
+    xN.appendChild(xE)
+    xN.appendChild(xP)
+    if (message.from.sender) {
+      xE.textContent = message.from.sender + ' on behalf of '
+      xP.textContent = message.from.name
+    }
+    else if (message.from.name) {
+      xP.textContent = message.from.name
+    } else {
+      xE.textContent = message.from.email
+    }
+    $(xN).tooltip({placement : 'right', title:message.from.email})
+    // data-toggle="tooltip" data-placement="top" data-original-title="Default tooltip"
+
+    var xTd3 = document.createElement('td')
+    var xB = document.createElement('b')
+    var xS = document.createElement('span')
+    xTd3.appendChild(xB)
+    xTd3.appendChild(xS)
+    xB.textContent = message.subject
+    xS.textContent = ' ' + ((message.body.length > 65) ? message.body.substring(0,60)+'...' : message.body)
+    xTd3.style.whiteSpace = 'nowrap'
+    xTd3.style.overflow = 'hidden'
+
+    var xTd4 = document.createElement('td')
+    var when = new Date(message.date)
+    var diff = (new Date() - when) / 1000
+    // if (diff > 30 * 24 * 3600) 
+    /*else*/ if (diff > 48 * 3600)
+      when = when.getDate() + ' ' + I18n['en_US'].Month[when.getMonth()]
+      // when = (diff / 3600 / 24).toFixed() + ' days ago'
+    else if (diff > 2 * 3600)
+      when = (diff / 3600).toFixed() + ' hours ago'
+    else if (diff > 2 * 60)
+      when = (diff / 60).toFixed() + ' minutes ago'
+    else if (diff <= 2 * 60)
+      when = 'Just now'
+    else
+      when = '!?'
+    xTd4.textContent = when
+    
+    xTr.appendChild (xTd1)
+    xTr.appendChild (xTd2)
+    xTr.appendChild (xTd3)
+    xTr.appendChild (xTd4)
+    xTbl.appendChild (xTr)
+  }
+
+  window.onload = function () {
+
+    var app = new MailApp()
+  }
+
+</script>
+
+
+<div class="row" id="view-home">
+  <div class="col-md-4"></div>
+  <div class="col-md-4">
+
+    <div style="text-align:center">
+      <img src="/dist/img/mail.jpg" style="width:120px; height:120px; margin:30px auto; " />
+    </div>
+
+    <form>
+
+      <div class="form-group">
+        <label for="fh_l">Login</label>
+        <input type="text" class="form-control" id="fh_l" placeholder="Login">
+      </div>
+
+      <div class="form-group">
+        <label for="fh_s">Password</label>
+        <input type="password" class="form-control" id="fh_s" placeholder="Password">
+      </div>
+
+      <button type="submit" class="btn btn-default btn-primary" id="fh_submit">Connect</button>
+      <small><em style="color:red" id="fh_err"></em></small>
+    </form>
+  </div>
+</div>
+
+<div class="row" id="view-list">
+  <div class="col-md-2">
+    <a href="" class="btn btn-info btn-block">New message</a>
+    <ul class="nav nav-default" id="mailapp-flist">
+    </ul>
+  </div>
+
+  <div class="col-md-10">
+    <div class="navbar navbar-default" style="min-height:40px">
+
+      <ul class="nav nav-pills pull-left">
+        <li><a href="#"><i class="glyphicon glyphicon-th-list"></i> <i class="caret"></i></a></li>
+        <li class="divider"></li>
+        <li><a href="#"><i class="glyphicon glyphicon-inbox"></i> Archive</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-minus-sign"></i> Spam</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-trash"></i> Delete</a></li>
+        <li class="divider"></li>
+        <li><a href="#"><i class="glyphicon glyphicon-folder-open"></i> Move to <i class="caret"></i></a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-tag"></i> Tag <i class="caret"></i></a></li>
+      </ul>
+
+      <ul class="nav nav-pills pull-right">
+        <li><span><b>1-50</b> on <b>702</b> threads</span></li>
+        <li class="divider"></li>
+        <li><a href="#"><i class="glyphicon glyphicon-chevron-left"></i></a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-chevron-right"></i></a></li>
+        <li class="divider"></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            <i class="glyphicon glyphicon-cog"></i> Settings <i class="caret"></i>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+            <li class="divider"></li>
+            <li><a href="#">One more separated link</a></li>
+          </ul>
+        </li>
+      </ul>
+
+    </div>
+
+    <p id="sh_err"></p>
+
+    <table class="table table-condensed table-striped">
+      <thead>
+        <tr>
+          <th width="90px"></th>
+          <th width="240px">From:</th>
+          <th>Message:</th>
+          <th width="120px">Date:</th>
+        </tr>
+      </thead>
+      <tbody id="mailapp-mtable"></tbody>
+    </table>
+  </div>
+</div>
+
+<p style="height:50px"></p>

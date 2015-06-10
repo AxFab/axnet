@@ -1,0 +1,25 @@
+{
+  "name":"webserver",
+  "version":"1.1.0",
+  "license" : "BSD",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": {
+    "name": "Fabien Bavent",
+    "email": "fabien.bavent@gmail.com"
+  },
+  "contributors": [
+  ],
+  "dependencies": {
+    "crypto": "0.0.x",
+    "html-markup": "0.0.x"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "repository" : { 
+    "type" : "git",
+    "url" : "http://github.com/axfab/web.git"
+  }
+}

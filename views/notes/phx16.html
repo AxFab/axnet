@@ -1,0 +1,414 @@
+#{extends '/template_page.html' /}
+#{set title:'Mail App' /}
+
+<script type="text/javascript" src="/dist/lib/http.js"></script>
+<script type="text/javascript" src="/dist/lib/jsonrpc.js"></script>
+<script type="text/javascript"></script>
+
+
+<div class="row">
+  <div class="col-md-2">
+    <a href="" class="btn btn-info btn-block">New message</a>
+    <ul class="nav nav-default">
+      <li><a href="#">Inbox <span class="badge">3</span></a></li>
+      <li><a href="#">Marked</a></li>
+      <li><a href="#">Important <span class="badge">1</span></a></li>
+      <li><a href="#">Folders </a>
+        <li><a href="#">SocialNetwork <span class="badge">8</span></a></li>
+        <li><a href="#">Promotions <span class="badge">8</span></a></li>
+        <li><a href="#">Notifications <span class="badge">8</span></a></li>
+        <li><a href="#">Forums <span class="badge">8</span></a></li>
+      </li>
+      <li><a href="#">Important <span class="badge">1</span></a></li>
+    </ul>
+  </div>
+
+  <div class="col-md-10">
+
+    <div class="row">
+
+      <div class="col-md-4">
+        <h3>Basic architectures</h3>
+        <p>6 main registers of 16 bits: Ax, Bx, Sp, Bp, Ip, Fg.</p>
+        <p>16 Bits RAM <b>64Ko</b>, without cache.
+        <p>Support connection for Math1, Math2 and Bus locking (multi-processor).</p>
+        <p>Special register for CPU settings (up to 128 x 2 bytes).</p>
+      </div>
+
+      <div class="col-md-4">
+      </div>
+
+      <div class="col-md-4">
+        <h3>Connectivity</h3>
+        <p>IO port from 00 to 3f (64)</p>
+        <dl>
+          <dt>04-05<dt> <dd>Keyboard.</dd>
+        </dl> 
+      </div>
+
+    </div>
+
+
+    <div class="row">
+
+      <div class="col-md-12">  
+        <h2>Mnemonics</h2>
+        <p class="lead">Common: 
+          <a href="#op_ADC">ADC</a> | 
+          <a href="#op_ADD">ADD</a> | 
+          <a href="#op_AND">AND</a> | 
+          <a href="#op_CALL">CALL</a> | 
+          <a href="#op_CMP">CMP</a> | 
+          <a href="#op_DEC">DEC</a> | 
+          <a href="#">HLT</a> | 
+          <a href="#">IN</a> | 
+          <a href="#">INC</a> | 
+          <a href="#">INT</a> | 
+          <a href="#">IRET</a> | 
+          <a href="#">Jcc</a> | 
+          <a href="#">JMP</a> | 
+          <a href="#">MOV</a> | 
+          <a href="#">NEG</a> | 
+          <a href="#">NOT</a> | 
+          <a href="#">OR</a> | 
+          <a href="#">OUT</a> |
+          <a href="#">PUSH</a> | 
+          <a href="#">POP</a> | 
+          <a href="#">RET</a> | 
+          <a href="#">ROL</a> | 
+          <a href="#">ROR</a> | 
+          <a href="#">SBB</a> | 
+          <a href="#">SHL</a> | 
+          <a href="#">SHR</a> | 
+          <a href="#">SUB</a> | 
+          <a href="#">TEST</a> | 
+          <a href="#">XOR</a>
+        </p>
+        <p class="lead">Numeric: 
+          <a href="#">DIV</a> | 
+          <a href="#">IDIV</a> | 
+          <a href="#">IMUL</a> | 
+          <a href="#">MUL</a>
+        </p>
+        <p class="lead">Atomic: 
+          <a href="#">LOCK</a> | 
+          <a href="#">XADD</a> | 
+          <a href="#">XTSET</a>
+        </p>
+      </div>
+      <div class="col-md-6">  
+        <h4><a name="op_ADC"></a><b>ADC</b> <small>Add with Carry</small></h4>
+        <table class="table table-condensed table-striped">
+          <tr><td>0x1r</td><th>ADC r1, r2</th><td>r1 &lt;- r1 + r2 + Fc</td></tr>
+          <tr><td>0x72</td><th>ADC ax, i8</th><td>ax &lt;- ax + i8 + Fc</td></tr>
+          <tr><td>0x73</td><th>ADC cx, i8</th><td>cx &lt;- cx + i8 + Fc</td></tr>
+        </table>
+        <p>Adds the destination operand (first operand), the source operand (second operand), and the carry (CF) flag and stores the result in the destination operand. The state of the CF flag represents a carry from a previous addition. When an immediate value is used as an operand, it is signextended to the length of the destination operand format.<br/>
+        The ADC instruction does not distinguish between signed or unsigned operands. The ADC instruction is usually executed as part of a multibyte or multiword addition in which an ADD instruction is followed by an ADC instruction.</p>
+        <p><b>Flags Affected: </b>Fc, Fo, Fs, Fz, and Fp are set according to the result.</p>
+      </div>
+      <div class="col-md-6">  
+        <h4><a name="op_ADD"></a><b>ADD</b> <small>Add</small></h4>
+        <table class="table table-condensed table-striped">
+          <tr><td>0x0r</td><th>ADD r1, r2</th><td>r1 &lt;- r1 + r2</td></tr>
+          <tr><td>0x70</td><th>ADD ax, i8</th><td>ax &lt;- ax + i8</td></tr>
+          <tr><td>0x71</td><th>ADD cx, i8</th><td>cx &lt;- cx + i8</td></tr>
+        </table>
+        <p>Adds the destination operand (first operand), the source operand (second operand) and stores the result in the destination operand. When an immediate value is used as an operand, it is signextended to the length of the destination operand format.<br/>
+        The ADD instruction does not distinguish between signed or unsigned operands. </p>
+        <p><b>Flags Affected: </b>Fc, Fo, Fs, Fz, and Fp are set according to the result.</p>
+      </div>
+      <div class="col-md-12">
+        <hr/>
+      </div>
+      <div class="col-md-6">
+        <h4><a name="op_AND"></a><b>AND</b> <small>Logical AND</small></h4>
+        <table class="table table-condensed table-striped">
+          <tr><td>0x4r</td><th>AND r1, r2</th><td>r1 &lt;- r1 &amp; r2</td></tr>
+          <tr><td>0x68</td><th>AND ax, i8</th><td>ax &lt;- ax &amp; i8</td></tr>
+          <tr><td>0x69</td><th>AND cx, i8</th><td>cx &lt;- cx &amp; i8</td></tr>
+        </table>
+        <p>Performs a bitwise AND operation on the destination (first) and source (second) operands and stores the result in the destination operand location.<br/>
+        The ADD instruction does not distinguish between signed or unsigned operands. </p>
+        <p><b>Flags Affected: </b>Fo and Fc are cleared ; Fs, Fz, and Fp are set according to the result.</p>
+      </div>
+      <div class="col-md-6">
+        <h4><a name="op_CALL"></a><b>CALL</b> <small>Call Procedure</small></h4>
+        <table class="table table-condensed table-striped">
+          <tr><td>0xf8</td><th>CALL i16</th><td>[sp] &lt;- ip ; sp &lt;- sp -2 ; ip &lt;- ip + i16</td></tr>
+          <tr><td>0xfe 0xf8</td><th>CALL i16</th><td>[sp] &lt;- ip ; sp &lt;- sp -2 ; ip &lt;- i16</td></tr>
+        </table>
+        <p>Saves procedure linking information on the stack and branches to the called procedure specified using the target operand. The target operand specifies the address of the first instruction in the called procedure.<br/> </p>
+        <p><b>Flags Affected: </b>None.</p>
+      </div>
+      </div>
+      <div class="col-md-12">
+        <hr/>
+      </div>
+      <div class="col-md-6">
+        <h4><a name="op_CMP"></a><b>CMP</b> <small>Compare</small></h4>
+      </div>
+      <div class="col-md-6">
+        <h4><a name="op_DEC"></a><b>DEC</b> <small>Decrement</small></h4>
+      </div>
+
+
+      <div class="col-md-12">  
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+      </div>
+
+      <div class="col-md-12">  
+        <h2>Instruction Format</h2>
+        <table class="table table-condensed table-striped">
+          <tr><th>ADC</th><td></td><td></td></tr>
+          <tr><th></th><td>register to register</td><td> 0001 r1 r2</td></tr>
+          <tr><th>ADD</th><td> .... .... </td></tr>
+          <tr><th>AND</th><td> .... .... </td></tr>
+          <tr><th>CALL</th><td> .... .... </td></tr>
+          <tr><th>CMP</th><td> .... .... </td></tr>
+          <tr><th>DEC</th><td> .... .... </td></tr>
+          <tr><th>HLT</th><td> .... .... </td></tr>
+          <tr><th>IN</th><td> .... .... </td></tr>
+          <tr><th>INC</th><td> .... .... </td></tr>
+          <tr><th>INT</th><td> .... .... </td></tr>
+          <tr><th>IRET</th><td> .... .... </td></tr>
+          <tr><th>Jcc</th><td> .... .... </td></tr>
+          <tr><th>JMP</th><td> .... .... </td></tr>
+          <tr><th>MOV</th><td> .... .... </td></tr>
+          <tr><th>NEG</th><td> .... .... </td></tr>
+          <tr><th>NOT</th><td> .... .... </td></tr>
+          <tr><th>OR</th><td> .... .... </td></tr>
+          <tr><th>OUT</th><td> .... .... </td></tr>
+          <tr><th>PUSH</th><td> .... .... </td></tr>
+          <tr><th>POP</th><td> .... .... </td></tr>
+          <tr><th>RET</th><td> .... .... </td></tr>
+          <tr><th>ROL</th><td> .... .... </td></tr>
+          <tr><th>ROR</th><td> .... .... </td></tr>
+          <tr><th>SBB</th><td> .... .... </td></tr>
+          <tr><th>SHL</th><td> .... .... </td></tr>
+          <tr><th>SHR</th><td> .... .... </td></tr>
+          <tr><th>SUB</th><td> .... .... </td></tr>
+          <tr><th>TEST</th><td> .... .... </td></tr>
+          <tr><th>XOR</th><td> .... .... </td></tr>
+          <tr><th>DIV</th><td> .... .... </td></tr>
+          <tr><th>IDIV</th><td> .... .... </td></tr>
+          <tr><th>IMUL</th><td> .... .... </td></tr>
+          <tr><th>MUL</th><td> .... .... </td></tr>
+          <tr><th>LOCK</th><td> .... .... </td></tr>
+          <tr><th>XADD</th><td> .... .... </td></tr>
+          <tr><th>XTSET</th><td> .... .... </td></tr>
+
+        </table>
+      </div>
+
+      <style type="text/css">
+      .table-matrix td:first-child, .table-matrix th:first-child {
+        border-left:1px solid #DDD;
+      }
+      .table-matrix td, .table-matrix th {
+        text-align: center;
+        border-right:1px solid #DDD;
+      }
+      </style>
+
+      <div class="col-md-12">  
+        <h2>Opcode</h2>
+        <table class="table table-condensed table-striped table-matrix">
+          <tr>
+            <th width="4%"></th>
+            <th width="6%">0x.0</th>
+            <th width="6%">0x.1</th>
+            <th width="6%">0x.2</th>
+            <th width="6%">0x.3</th>
+            <th width="6%">0x.4</th>
+            <th width="6%">0x.5</th>
+            <th width="6%">0x.6</th>
+            <th width="6%">0x.7</th>
+            <th width="6%">0x.8</th>
+            <th width="6%">0x.9</th>
+            <th width="6%">0x.A</th>
+            <th width="6%">0x.B</th>
+            <th width="6%">0x.C</th>
+            <th width="6%">0x.D</th>
+            <th width="6%">0x.E</th>
+            <th width="6%">0x.F</th>
+          </tr>
+          <tr><th>0x0.</th><td colspan="16">ADD r1, r2</td></tr>
+          <tr><th>0x1.</th><td colspan="16">SUB r1, r2</td></tr>
+          <tr><th>0x2.</th><td colspan="16">ADC r1, r2</td></tr>
+          <tr><th>0x3.</th><td colspan="16">SBB r1, r2</td></tr>
+          <tr><th>0x4.</th><td colspan="16">AND r1, r2</td></tr>
+          <tr><th>0x5.</th><td colspan="16">OR r1, r2</td></tr>
+          <tr><th>0x6.</th><td colspan="16">XOR r1, r2</td></tr>
+          <tr><th>0x7.</th><td colspan="16">MOV r1, r2</td></tr>
+          <tr><th>0x8.</th>
+            <td colspan="4">MOV ax.8, [rg + i8]</td>
+            <td colspan="4">MOV ax.8+, [rg + i8]</td>
+            <td colspan="4">MOV [rg + i8], ax.8</td>
+            <td colspan="4">MOV [rg + i8], ax.8+</td>
+          </tr>
+          <tr><th>0x9.</th><td colspan="16">CMP r1, r2</td></tr>
+          <tr><th>0xA.</th>
+            <td colspan="4">INC rx</td>
+            <td colspan="4">DEC rx</td>
+            <td colspan="4">NEG rx</td>
+            <td colspan="4">NOT rx</td>
+          </tr>
+          <tr><th>0xB.</th>
+            <td colspan="2">SHL rB, 1</td>
+            <td colspan="2">SHL rB, i8</td>
+            <td colspan="2">SHR rB, 1</td>
+            <td colspan="2">SHR rB, i8</td>
+            <td colspan="4">PUSH rB</td>
+            <td colspan="4">POP rB</td>
+          </tr>
+          <tr><th>0xC.</th><td colspan="16">TEST r1, r2</td></tr>
+
+          <tr><th>0xD.</th>
+            <td colspan="4">Math 1</td>
+            <td colspan="4">Math 2</td>
+            <td>ADD Ax, i8</td>
+            <td>SUB Ax, i8</td>
+            <td>ADC Ax, i8</td>
+            <td>SBB Ax, i8</td>
+            <td>AND Ax, i8</td>
+            <td>OR Ax, i8</td>
+            <td>XOR Ax, i8</td>
+            <td>MOV Ax, i8</td>
+
+          </tr>
+          <tr><th>0xE.</th>
+            <td>Jo</td>
+            <td>Jno</td>
+            <td>Jb, Jnae</td>
+            <td>Jnb, Jae</td>
+            <td>Je, Jz</td>
+            <td>Jne, Jnz</td>
+            <td>Jbe, Jna</td>
+            <td>Jnbe, Ja</td>
+            <td>Js</td>
+            <td>Jns</td>
+            <td>Jp, Jpe</td>
+            <td>Jnp, Jpo</td>
+            <td>Jl, Jnge</td>
+            <td>Jnl, Jge</td>
+            <td>Jle, Jng</td>
+            <td>Jnle, Jng</td>
+          </tr>
+          <tr><th>0xF.</th>
+            <td>XADD Ax, Bx</td>
+            <td>XTSET Ax, Bx</td>
+            <td>NOP</td>
+            <td>LOCK</td>
+            <td colspan="4">MOV rA, i16</td>
+            <td>Call i16</td>
+            <td>RET</td>
+            <td>JMP i16</td>
+            <td>INT i8</td>
+            <td>MOV Ax, [C+i8]</td>
+            <td>MOV [C+i8], Ax</td>
+            <td>Grp1</td>
+            <td>Grp2</td>
+          </tr>
+
+        </table>
+      </div>
+
+      <div class="col-md-12">  
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+      </div>
+
+
+      <div class="col-md-12">
+        <h2>Opcode</h2>
+        <ul>
+          <!-- <li><code>0 oop rA rB</code> <ul> -->
+            <li><code>0 000 rA rB</code>  &mdash; <b>ADD</b> rA = rA + rB</li>
+            <li><code>0 001 rA rB</code>  &mdash; <b>SUB</b> rA = rA - rB</li>
+            <li><code>0 010 rA rB</code>  &mdash; <b>ADC</b> rA = rA + rB + Fc</li>
+            <li><code>0 011 rA rB</code>  &mdash; <b>SBB</b> rA = rA - rB - Fc</li>
+            <li><code>0 100 rA rB</code>  &mdash; <b>AND</b> rA = rA &amp; rB</li>
+            <li><code>0 111 rA rB</code>  &mdash; <b>OR</b> rA = rA ^ rB</li>
+            <li><code>0 101 rA rB</code>  &mdash; <b>XOR</b> rA = rA | rB</li>
+            <li><code>0 110 rA rB</code>  &mdash; <b>MOV</b> rA = rB</li>
+            <li></li>
+            <li><code>1 000 00 rB</code>  &mdash; <b>MOV</b> Ax.8 = [rB + i8]</li>
+            <li><code>1 000 01 rB</code>  &mdash; <b>MOV</b> Ax.8+ = [rB + i8]</li>
+            <li><code>1 000 10 rB</code>  &mdash; <b>MOV</b> [rB + i8] = Ax.8</li>
+            <li><code>1 000 11 rB</code>  &mdash; <b>MOV</b> [rB + i8] = Ax.8+</li>
+            <li></li>
+            <li><code>1 001 rA rB</code>  &mdash; <b>CMP</b> rA - rB</li>
+            <li></li>
+            <li><code>1 010 00 rB</code>  &mdash; <b>INC</b> rB = rB + 1</li>
+            <li><code>1 010 01 rB</code>  &mdash; <b>DEC</b> rB = rB - 1</li>
+            <li><code>1 010 10 rB</code>  &mdash; <b>NEG</b> rB = -rB</li>
+            <li><code>1 010 11 rB</code>  &mdash; <b>NOT</b> rB = ~rB</li>
+            <li></li>
+            <li><code>1 011 00 0 r</code>  &mdash; <b>SHL</b> rB = rB &lt;&lt; 1</li>
+            <li><code>1 011 00 1 r</code>  &mdash; <b>SHL</b> rB = rB &lt;&lt; i8</li>
+            <li><code>1 011 01 0 r</code>  &mdash; <b>SHR</b> rB = rB &gt;&gt; 1</li>
+            <li><code>1 011 01 1 r</code>  &mdash; <b>SHR</b> rB = rB &gt;&gt; i8</li>
+            <li></li>
+            <li><code>1 011 10 00</code>  &mdash; <b>XADD</b> [Ax] = [Ax] + Bx; Ax = [Ax]</li>
+            <li><code>1 011 10 01</code>  &mdash; <b>XTSET</b> Bx = [Ax]; cc( [Ax] &amp; Bx )z [Ax] = Bx</li>
+            <li></li>
+            <li><code>1 011 10 10</code>  &mdash; <b>NOP</b></li>
+            <li><code>1 011 10 11</code>  &mdash; <b>LOCK</b></li>
+            <li></li>
+            <li><code>1 011 11 rA</code>  &mdash; <b>MOV</b> rA = i16</li>
+            <li></li>
+            <li><code>1 100 rA rB</code>  &mdash; <b>TEST</b> rA &amp; rB</li>
+            <li></li>
+            <li><code>1 101 00 00</code>  &mdash; <b>MUL</b> Ax = Ax * Bx</li>
+            <li><code>1 101 00 01</code>  &mdash; <b>DIV</b> Ax = Ax / Bx</li>
+            <li><code>1 101 00 10</code>  &mdash; <b>IMUL</b> Ax = Ax * Bx</li>
+            <li><code>1 101 00 11</code>  &mdash; <b>IDIV</b> Ax = Ax / Bx</li>
+            <li></li>
+            <li><code>1 101 01 ..</code>  &mdash; <b>[bad]</b></li>
+            <li></li>
+            <li><code>1 101 1 000</code>  &mdash; <b>ADD</b> Ax = Ax + i8</li>
+            <li><code>1 101 1 001</code>  &mdash; <b>SUB</b> Ax = Ax - i8</li>
+            <li><code>1 101 1 010</code>  &mdash; <b>ADC</b> Ax = Ax + i8 + Fc</li>
+            <li><code>1 101 1 011</code>  &mdash; <b>SBB</b> Ax = Ax - i8 - Fc</li>
+            <li><code>1 101 1 100</code>  &mdash; <b>AND</b> Ax = Ax &amp; i8</li>
+            <li><code>1 101 1 101</code>  &mdash; <b>OR</b> Ax = Ax | i8</li>
+            <li><code>1 101 1 110</code>  &mdash; <b>XOR</b> Ax = Ax ^ i8</li>
+            <li><code>1 101 1 111</code>  &mdash; <b>MOV</b> Ax = i8</li>
+            <li></li>
+            <li><code>1 110 Tttn</code>  &mdash; <b>Jcc</b> cc(F?) ; Ip = i16</li>
+            <li></li>
+            <li><code>1 111 00 rB</code>  &mdash; <b>PUSH</b> [Sp] = rB ; Sp -= 2</li>
+            <li><code>1 111 01 rB</code>  &mdash; <b>POP</b> rB = [Sp] ; Sp += 2</li>
+            <li></li>
+            <li><code>1 111 10 00</code>  &mdash; <b>CALL</b> [Sp] = Ip ; Sp -= 2 ; Ip = i16</li>
+            <li><code>1 111 10 01</code>  &mdash; <b>RET</b> Sp += 2 ; Ip = [Sp]</li>
+            <li><code>1 111 10 10</code>  &mdash; <b>JMP</b> Ip = i16</li>
+            <li><code>1 111 10 11</code>  &mdash; <b>INT</b> [Sp] = Ip ; Sp -= 2 ; Ip = cr2</li>
+            <li></li>
+            <li><code>1 111 11 00</code>  &mdash; <b>MOV</b> Ax = [Crtl + i8]</li>
+            <li><code>1 111 11 01</code>  &mdash; <b>MOV</b> [Crtl + i8] = Ax</li>
+            <li></li>
+            <li><code>1 111 11 10</code>  &mdash; <b>Grp1</b>  <ul>
+              <li><code>11111110 - 0000 0000</code>  &mdash; <b>MOV</b> Ax = i16</li>
+            </ul></li>
+            <li><code>1 111 11 11</code>  &mdash; <b>Grp2</b></li>
+
+          <!-- </li> -->
+        </ul>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+      </div>
+
+
+
+      <div class="col-md-12">  
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+

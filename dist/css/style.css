@@ -1,0 +1,34 @@
+
+body { height: 100%; margin:0; padding:0; } 
+
+/*
+.btn, .form-control { border-radius: 0px; padding:5px 3px; }
+#myCarousel h2{ margin: 0; color: #666; padding-top: 90px; font-size: 52px; }
+#myCarousel .item{ background: #323232; text-align: center; height: 300px !important; }
+*/
+
+header { position:fixed; width:100%; margin:0; top:0; z-index:99999;  }
+.navbar { border:0px; } 
+.navbar-default .navbar-brand,
+.navbar-default .navbar-brand:hover { font-size: 1.8em; background-color:rgb(7,140,169); color:#e0e0e0; }
+
+body > div { min-height: 100%; height: auto !important; height:100%; margin: 0 auto; padding-top: 60px; padding-bottom: 15px; }
+
+footer {height:230px; margin: 0px; background: #181818; color:#F2F2F2; border-top: 1px solid rgb(7,140,169); }
+footer > div > div > div { text-align: left; padding:60px; }
+
+.btn-group > .btn + .dropdown-toggle { padding: 14px 8px; }
+.progress-bar, .progress { height: 9px; }
+
+
+.honey { display: none}
+.form-horizontal textarea { width:100%; max-width:100%; min-width:100%; height: 200px }
+.imgp { margin:10px; width:80px; height:80px; border:1px solid gray; }
+
+.panel-body .divider { display: none}
+
+
+.ico32 { width: 32px; height: 32px; }
+.ico24 { width: 24px; height: 24px; }
+.ico16 { width: 16px; height: 16px; }
+

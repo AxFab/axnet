@@ -1,0 +1,72 @@
+#{extends '/template_page.html' /}
+#{set title:'SmokeOS kernel' /}
+#{set menu:'roadmap' /}
+
+<script type="text/javascript" src="/dist/lib/http.js"></script>
+<script type="text/javascript" src="/dist/lib/jsonrpc.js"></script>
+<script type="text/javascript"></script>
+
+
+<div class="row">
+
+#{include '/smoke-os/menu.html' /}
+
+  <div class="col-md-10">
+
+    <div class="row">
+
+      <div class="col-md-12">
+        <h2>Roadmap</h2>
+        <p>@todo: /api/issue/smoke-os/releases</p>
+        <p>@todo: /api/issue/smoke-os/release/v0.2</p>
+        
+        <div class="well">
+          <h4>Release v0.2</h4>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="8" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+            </div>
+          </div>
+          <ul>
+            <li>FAT32</li>
+            <li>Sleep</li>
+          </ul>
+          <small>
+            issues: <span class="badge">2</span> ; 
+            fixed: <span class="badge">0</span> ; 
+            total: <span class="badge">2</span> ; 
+          </small>
+
+        </div>
+
+
+        <div class="well">
+          <h4>Release v0.1</h4>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="8" aria-valuemin="0" aria-valuemax="100" style="width: 28%;">
+            </div>
+          </div>
+          <ul>
+            <li>User creation</li>
+            <li>User capability</li>
+            <li>Multi-thread</li>
+            <li>Multi-process</li>
+            <li>Terminal re-echoing</li>
+            <li>Command interpreter</li>
+            <li>ls / pwd / cat / cd / sysinfo</li>
+          </ul>
+          <small>
+            issues: <span class="badge">7</span> ; 
+            fixed: <span class="badge">2</span> ; 
+            total: <span class="badge">7</span> ; 
+          </small>
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+

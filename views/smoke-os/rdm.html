@@ -1,0 +1,425 @@
+#{extends '/template_page.html' /}
+#{set title:'BugTracker' /}
+
+<script type="text/javascript" src="/dist/js/BigInt.js"></script>
+<script type="text/javascript" src="/dist/lib/http.js"></script>
+<script type="text/javascript" src="/dist/lib/jsonrpc.js"></script>
+<script type="text/javascript">
+
+var GUI = {}
+GUI.common = {}
+GUI.common.cell = function (xTr, text) 
+{
+  var xTd = document.createElement('td')
+  xTd.textContent = text;
+  xTr.appendChild(xTd);
+  return xTd;
+}
+GUI.release = {}
+GUI.release.changeLogs = function (data, opt)
+{
+  var xDiv = document.createElement('div')
+  xDiv.className = 'collapse'
+  xDiv.id = 'colps_'+data.id+'_logs'
+  var html = ''
+  if (data.issues.done < data.tickets.length) {
+    var completed = (data.issues.done*100 / data.tickets.length).toFixed(0)
+    html += '<h4>Release: '+completed+'% ('+data.issues.done+' on '+data.tickets.length+' tickets)</h4>'
+    html += '<div class="progress">'
+    html += '  <div class="progress-bar" role="progressbar" aria-valuenow="'+completed+'" aria-valuemin="0" aria-valuemax="100" style="width: '+completed+'%;"></div>'
+    html += '</div>'
+  } else
+    html += '<h4>Changelogs</h4>'
+  html += '<ul>'
+  for (var i=0; i<data.tickets.length; ++i) {
+    var issue = data.tickets[i]
+    if (issue.status == 'Close')
+      html += '  <li><s><b>#'+issue.no+':</b> '+issue.summary+'</s></li>'
+    else
+      html += '  <li><b>#'+issue.no+':</b> '+issue.summary+'</li>'
+  }
+  html += '</ul>'
+  xDiv.innerHTML = html
+  return xDiv
+}
+GUI.release.downloads = function (data, opt)
+{
+  var xDiv = document.createElement('div')
+  xDiv.className = 'collapse'
+  xDiv.id = 'colps_'+data.id+'_dwld'
+  var html = ''
+  html += '<h4>Download</h4>'
+  html += '<div class="btn-group" role="group" aria-label="...">'
+  for (var i=0; i<data.downld.length; ++i)
+    html += '<a href="'+data.downld[i].file+'" class="btn btn-default">'+data.downld[i].name+'</a>'
+  html += '</div>'
+  xDiv.innerHTML = html
+  return xDiv
+}
+
+GUI.release.tableEntry = function (data, opt)
+{
+  var idx = 'colps_'+data.id
+  var xTr = document.createElement('tr')
+  var xTr2 = document.createElement('tr')
+  document.getElementById('releaseTable').appendChild(xTr)
+  document.getElementById('releaseTable').appendChild(xTr2)
+  GUI.common.cell (xTr2)
+  var xSub = GUI.common.cell (xTr2)
+  xSub.colSpan = 3
+  GUI.common.cell (xTr2)
+  var html = ''
+  html += '<td>'+data.date+'</td>'
+  html += '<td>'+data.name+' &nbsp;'
+  if (data.status == 'stable')
+    html += '  <span class="label label-warning">stable</span>'
+  else if (data.status) {
+    html += '  <span class="label label-danger">unstable</span>'
+    html += '  <span class="label label-primary">'+data.status+'</span>'
+  }
+  html += '  <span class="pull-right">'
+  if (data.downld && data.downld.length > 0) {
+    xSub.appendChild(GUI.release.downloads(data, opt));
+  }
+  if (data.tickets && data.tickets.length > 0) {
+    html += '    <a class="btn btn-default btn-xs" data-toggle="collapse" href="#colps_'+data.id+'_logs"><i class="glyphicon glyphicon-list"></i> Changelogs</a>'
+    xSub.appendChild(GUI.release.changeLogs(data, opt));
+  }
+  if (data.downld && data.downld.length > 0) {
+    html += '    <a class="btn btn-info btn-xs" data-toggle="collapse" href="#colps_'+data.id+'_dwld"><i class="glyphicon glyphicon-save"></i> Download</a>'
+  }
+  html += '  </span>'
+  html += '</td>'
+  html += '<td>Released</td>'
+  html += '<td>'+data.issues.defect+' / '+data.issues.enhancement+' / '+data.issues.feature+'</td>'
+  if (data.git) {
+    html += '<td>' + data.git.substring(0, 7)+' '
+    html += '<a href="https://github.com/AxFab/kernel/tree/'+data.git+'"'
+    html += ' class="btn btn-primary btn-xs pull-right glyphicon glyphicon-share-alt"></a></td>'
+  } else 
+    html += '<td>...</td>'
+  xTr.innerHTML = html
+}
+
+var buildRow = function (data, columns)
+{
+  var xTr = document.createElement('tr')
+
+  for (var i=0; i<columns.length; ++i) {
+    var xTd = document.createElement('td')
+
+    xTd.textContent = data[columns[i].id]
+    if (columns[i].format) {
+      if (typeof columns[i].format === 'function')
+        xTd.textContent = columns[i].format(data)
+      else 
+        xTd.textContent = columns[i].format.replace(/DATA/g, data[columns[i].id])
+    }
+
+    xTr.appendChild(xTd)
+  }
+
+  return xTr
+}
+
+var buildTicketRow = function (ticket) 
+{
+  var xTr = buildRow(ticket, [
+      { id:'no', format:'#DATA' },
+      { id:'summary' },
+      { id:'milestone' },
+      { id:'type' },
+      { id:'priority', format:function(data) { 
+        if (data.estimate != 0)
+          return data.priority + ' [' + data.estimate+ ']'
+        return data.priority
+      } },
+      { id:'ownedBy' },
+      { id:'status' },
+      { id:'date' },
+    ])
+
+  if (ticket.status == 'Resolved') {
+    xTr.className = 'success'
+  } else if (ticket.priority == 'Fatal') {
+    xTr.className = 'danger'
+  } else if (ticket.type == 'Defect') {
+    xTr.className = 'warning'
+  }
+
+  document.getElementById('ticketBody').appendChild(xTr)
+}
+
+
+window.onload = function () 
+{
+  $.getJSON('/data/tickets_kernel.json', function (tickets) {
+    for (var i=0; i<tickets.length; ++i) {
+
+      buildTicketRow (tickets[i])
+    }
+  })
+
+  data = [
+    {
+      "date":"28/05/2015",
+      "name":"SmokeOS v0.3",
+      "status":"alpha",
+      "issues": {
+        "done":1,
+        "defect":2,
+        "enhancement":5,
+        "feature":9,
+      },
+      tickets:[
+        {
+          "no":1,
+          "reportedBy":"Fabien B.",
+          "ownedBy":"Fabien B.",
+          "priority":"Major",
+          "estimate":1,
+          "milestone":"0.1",
+          "dependsOn":[],
+          "summary":"Create dual stream inodes.",
+          "date":"28/05/2015",
+          "type":" Enhancement",
+          "status":"Close"
+        },
+        {
+          "no":2,
+          "reportedBy":"Fabien B.",
+          "ownedBy":"Fabien B.",
+          "priority":"Major",
+          "estimate":1,
+          "milestone":"0.1",
+          "dependsOn":[],
+          "summary":"Sys call sys_open is allow to create new files.",
+          "date":"28/05/2015",
+          "type":" Feature",
+          "status":"Open"
+        },
+      ],
+      "id":"v0_3",
+    },
+    {
+      "date":"28/05/2015",
+      "name":"SmokeOS v0.2",
+      "status":"stable",
+      "issues": {
+        "done":2,
+        "defect":2,
+        "enhancement":5,
+        "feature":9,
+      },
+      tickets:[
+        {
+          "no":1,
+          "reportedBy":"Fabien B.",
+          "ownedBy":"Fabien B.",
+          "priority":"Major",
+          "estimate":1,
+          "milestone":"0.1",
+          "dependsOn":[],
+          "summary":"Create dual stream inodes.",
+          "date":"28/05/2015",
+          "type":" Enhancement",
+          "status":"Open"
+        },
+        {
+          "no":2,
+          "reportedBy":"Fabien B.",
+          "ownedBy":"Fabien B.",
+          "priority":"Major",
+          "estimate":1,
+          "milestone":"0.1",
+          "dependsOn":[],
+          "summary":"Sys call sys_open is allow to create new files.",
+          "date":"28/05/2015",
+          "type":" Feature",
+          "status":"Open"
+        },
+      ],
+      "id":"v0_2",
+      git : 'b5bd1e06aa68f77e15b1093e688cc07bdb3518f3'
+    },
+    {
+      "date":"28/05/2015",
+      "name":"SmokeOS v0.1",
+      "status":"",
+      "issues": {
+        "done":2,
+        "defect":2,
+        "enhancement":5,
+        "feature":9,
+      },
+      tickets:[
+        {
+          "no":1,
+          "reportedBy":"Fabien B.",
+          "ownedBy":"Fabien B.",
+          "priority":"Major",
+          "estimate":1,
+          "milestone":"0.1",
+          "dependsOn":[],
+          "summary":"Create dual stream inodes.",
+          "date":"28/05/2015",
+          "type":" Enhancement",
+          "status":"Open"
+        },
+        {
+          "no":2,
+          "reportedBy":"Fabien B.",
+          "ownedBy":"Fabien B.",
+          "priority":"Major",
+          "estimate":1,
+          "milestone":"0.1",
+          "dependsOn":[],
+          "summary":"Sys call sys_open is allow to create new files.",
+          "date":"28/05/2015",
+          "type":" Feature",
+          "status":"Open"
+        },
+      ],
+      "id":"v0_1",
+      "downld": [
+        { name:"x86 iso image", file:"/data/releases/SmokeOs-0.1-x86.iso" },
+        { name:"x86 kernel", file:"/data/releases/kernel_smkos-0.1-x86.img" }
+      ],
+      git : 'b5bd1e06aa68f77e15b1093e688cc07bdb3518f3'
+    },
+  ]
+
+
+  for (var i=0; i<data.length; ++i)
+    GUI.release.tableEntry(data[i]);
+}
+
+</script>
+
+
+<div class="row">
+  <div class="col-md-2 hidden-xs hidden-sm">
+    <ul class="nav nav-default">
+      <li><a href="#" class="btn btn-info btn-block">Opened issues <span class="badge">12</span></a></a></li>
+      <li><a href="#">Roadmap</a></li>
+      <li><a href="#">W.I.P. </a></li>
+    </ul>
+  </div>
+
+
+  <div class="col-md-10">
+    <div class="navbar navbar-default" style="min-height:40px">
+
+      <ul class="nav nav-pills pull-left">
+        <li><a href="#"><i class="glyphicon glyphicon-th-list"></i> <i class="caret"></i></a></li>
+        <li class="divider"></li>
+        <li><a href="#"><i class="glyphicon glyphicon-inbox"></i> Report</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-close"></i> Delete</a></li>
+        <li class="divider"></li>
+        <li><a href="#"><i class="glyphicon glyphicon-folder-open"></i> Move to <i class="caret"></i></a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-tag"></i> Tag <i class="caret"></i></a></li>
+      </ul>
+
+      <ul class="nav nav-pills pull-right">
+        <li><span><b>1-50</b> on <b>702</b> issues</span></li>
+        <li class="divider"></li>
+        <li><a href="#"><i class="glyphicon glyphicon-chevron-left"></i></a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-chevron-right"></i></a></li>
+        <li class="divider"></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            <i class="glyphicon glyphicon-cog"></i> Settings <i class="caret"></i>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+            <li class="divider"></li>
+            <li><a href="#">One more separated link</a></li>
+          </ul>
+        </li>
+      </ul>
+
+    </div>
+
+    <table class="table table-condensed table-striped">
+      <thead>
+        <tr>
+          <th width="60px">Ticket</th>
+          <th>Summary</th>
+          <!-- <th width="80px">Component</th> -->
+          <th width="80px">Milestone</th>
+          <th width="80px">Type</th>
+          <th width="80px">Priority</th>
+          <th width="80px">Owner</th>
+          <th width="80px">Status</th>
+          <th width="80px">Created</th>
+        </tr>
+      </thead>
+      <tbody id="ticketBody">
+      </tbody>
+      <tbody>
+        <tr height="30px">
+        </tr>
+      </tbody>
+      <tbody id="ticketForm"  style="display:none">
+        <tr>
+          <th></th>
+          <td><input type="text" class="form-control" id="ticketBrief" placeholder="Brief" /></td>
+          <td><select class="form-control">
+            <option>0.1</option>
+            <option>0.2</option>
+          </select></td>
+          <td><select class="form-control">
+            <option>Defect</option>
+            <option>Improvment</option>
+            <option>Feature</option>
+            <option>Story</option>
+          </select></td>
+          <td><select class="form-control">
+            <option>Minor</option>
+            <option>Major</option>
+            <option>Fatal</option>
+          </select></td>
+          <td>Fabien B.</td>
+          <td><a class="btn btn-primary">Create</a></td>
+          <td>24/04/2015</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td colspan="6"><textarea style="width:100%; max-width:750px"></textarea></td>
+          <td></td>
+        </tr>
+        <tr></tr>
+      </tbody>
+      <tbody id="ticketForm2" style="display:none">
+        <tr></tr>
+        <tr>
+          <th></th>
+          <td colspan="7"><a href="#" class="btn btn-danger">Create a new ticket &nbsp; <i class="glyphicon glyphicon-arrow-right"></i></a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+
+    <table class="table table-condensed table-striped">
+      <thead>
+        <tr>
+          <th width="60px">Date</th>
+          <th>Release</th>
+          <!-- <th width="80px">Component</th> -->
+          <th width="90px">Status</th>
+          <th width="90px">D.E.F.</th>
+          <th width="120px">Git hash commit</th>
+        </tr>
+      </thead>
+      <tbody id="releaseTable"></tbody>
+    </table>
+
+  </div>
+</div>
+

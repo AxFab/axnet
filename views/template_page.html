@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script type="text/javascript" src="/dist/js/jquery.min.js"></script>
+  <script type="text/javascript" src="/dist/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="/dist/css/style.css" />
+  <!-- <link rel="stylesheet" type="text/css" href="/dist/css/default.css" /> -->
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,200,600,200italic,300italic,400italic,700,600italic' rel='stylesheet' type='text/css'>
+  <title>AxFab.net - #{get title /}</title>
+  <style type="text/css">
+
+div.container {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  box-shadow: 0px 0px 5px black;
+}
+
+#header {
+  background-color: #181818;
+  margin-bottom: 15px
+}
+.row-footer {
+  background-color: #181818;
+  padding:50px 10px;
+  color:rgb(128,128,128);
+  font-family: 'Source Sans Pro';
+}
+.container {
+  background-color: white;
+}
+
+#header ul {
+  margin-bottom: 0px;
+  min-height: 40px;
+}
+
+#header ul li {
+  padding-bottom: 0px;
+  display: inline-block;
+}
+#header ul li a {
+  font-size:1.2em;
+  color:rgb(208,208,208);
+  font-family: 'Source Sans Pro';
+  font-variant: small-caps;
+}
+#header ul li a:hover {
+  background: none;
+  color:rgb(255,255,255);
+}
+.gly-red {
+  color: rgb(208,16,16)
+}
+
+
+#product-menu > div > a > i {
+  font-size: 1.3em
+}
+#product-menu > div:first-child > a {
+  text-align: left;
+}
+#product-menu > div:first-child > a > h3 {
+  margin:0px;
+}
+#product-menu > div > a > span {
+  font-size: 0.8em;
+}
+#product-menu > div > a > img {
+  float:left;
+  margin-right: 5px;
+  width:64px; height:64px;
+}
+#product-menu > div > a {
+  clear:left; height:76px;
+}
+
+.nav-pills > li > span {
+  padding: 10px 15px; 
+  height: 20px;
+  display: block;
+}
+.nav-pills > li.divider {
+  background: #E8E8E8;
+  width:1px;
+  height: 40px;
+}
+.nav-title {
+  color: #E8E8E8;
+  margin:0px;
+  padding: 2px;
+  font-size: 26px;
+  text-shadow:1px 1px 1px #e2e2e2;
+}
+.nav-title small {
+  color: #181818;
+  font-size: 0.8em;
+  text-shadow:1px 1px 1px #e2e8ef;
+}
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="row row-header" id="header" >
+      <div class="col-md-12">
+        <ul class="pull-left nav navbar nav-title">
+          <li><span>AxFab.net &nbsp;<!-- <small>#{get title /}</small> --></span></li>
+        </ul>
+        <ul class="pull-right nav navbar ">
+          <li>
+            <a href=""class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+              <i class="glyphicon glyphicon-menu-hamburger"></i> <span class="hidden-xs">Menu</span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="/index.html#"><i class="glyphicon glyphicon-home"></i> Home</a></li>
+              <li><a href="/smoke-os/#"><i class="glyphicon glyphicon-eye-open"></i> Smoke OS</a></li>
+              <li><a href="/mailapp.html#"><i class="glyphicon glyphicon-inbox"></i> Mail App</a></li>
+              <li><a href="/notes/all.html#"><i class="glyphicon glyphicon-star"></i> Projects</a></li>
+            </ul>
+          </li>
+          <!-- <li><a href=""><i class="glyphicon glyphicon-search"></i> <span class="hidden-xs">Search</span></a></li> -->
+          <li><a href="/mailapp.html"><i class="glyphicon glyphicon-user"></i> <span class="hidden-xs">Sign in</span></a></li>
+          <li><a href="/about.html"><i class="glyphicon glyphicon-send gly-red"></i> <span class="hidden-xs">About</span></a></li>
+        </ul>
+      </div>
+    </div>
+
+#{doLayout /}
+
+    <div class="row row-footer" >
+      <div class="col-md-12">
+        <img alt="Creative Commons License" class="pull-right" src="/dist/img/cc_by_nc.png" />
+        <p><small>Documentations, articles and any work presented on this website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a>.</small></p>
+        <p><small>All other trademarks are property of their respective owners. Software presented here have their own license. <a href="/about/about.html#privacy">Privacy Policy</a>.</small></p>
+        <img src="/dist/img/gandi_logo.jpg" class="pull-right ico24" alt="Gandi" />
+        <img src="/dist/img/nodejs_logo.jpg" class="pull-right ico24" alt="Node.js" />
+        <img src="/dist/img/github_logo.jpg" class="pull-right ico24" alt="Github" />
+        <p><small>This site is hosted by <a href="http://gandi.net/">Gandi</a>, powered by <a href="http://getbootstrap.com">Bootstrap</a> and <a href="http://nodejs.org/">Node.js</a>. Source code of the server can be found on <a href="https://github.com/axfab/axfab.net">its github repository</a>. </small></p>
+      </div>
+    </div>
+
+  </div>
+
+
+</body>
+</html>
