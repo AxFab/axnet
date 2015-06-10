@@ -24,14 +24,10 @@ var auth = {
 app.use('/favicon.ico', Server.static(__dirname + '/dist'))
 app.use('/dist', Server.static(__dirname + '/dist'))
 app.use('/node_modules', Server.static(__dirname + '/node_modules'))
-app.use('/src', Server.static(__dirname + '/src'))
 
-app.get('/data', Server.static(__dirname + '/data'))
-app.post('/data', Server.basicAuth(auth))
-app.post('/data', Server.store(__dirname + '/data'))
-
-
-
+// app.get('/data', Server.static(__dirname + '/data'))
+// app.post('/data', Server.basicAuth(auth))
+// app.post('/data', Server.store(__dirname + '/data'))
 app.post('/app', Server.service(axnet.MailService))
 
 // *.html pages (also handle directories)

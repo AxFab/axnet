@@ -1,23 +1,12 @@
 #{extends '/template_page.html' /}
-#{set title:'Mail App' /}
-
-<script type="text/javascript" src="/dist/lib/http.js"></script>
-<script type="text/javascript" src="/dist/lib/jsonrpc.js"></script>
-<script type="text/javascript"></script>
+#{set title:'Notes' /}
 
 
 <div class="row">
 
-  <div class="col-md-3 hidden-xs hidden-sm">
-    <ul class="nav nav-default nav-stacked nav-pills">
-      <li><a href="#"><h3>SmokeOs</h3></a><li>
-      <li class="active"><a href="/smoke-os/index.html"><i class="glyphicon glyphicon-th-list"></i> Projects</a></li>
-      <li><hr/></li>
-      <li><small style="color:#c2c2c2">...</small>
-    </ul>
-  </div>
+#{include '/notes/menu.html' /}
 
-  <div class="col-md-9">
+  <div class="col-md-10">
 
     <div class="row">
 
@@ -44,6 +33,12 @@
         <p>This lanaguage is far from the best available but I designed it because I needed file inclusion.</p>
 
       </div>
+
+      <div class="col-md-12">
+        <h2>Processsor 16 bits</h2>
+        <a href="/notes/phx16.html">More...</a>
+      </div>
+
 
     </div>
   </div>

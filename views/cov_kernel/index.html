@@ -1,0 +1,107 @@
+#{extends '/template_page.html' /}
+#{set title:'Code coverage report' /}
+
+<link rel="stylesheet" type="text/css" href="/dist/css/gcov.css"/>
+
+<div class="row">
+  
+  <div class="col-md-4">
+
+    <h1>Kernel <small>Code coverage report</small></h1>
+    <p class="lead">Generated the 8 June 2015</p>
+
+    <p>&nbsp;</p>
+
+    <table cellpadding=1 border=0 width="100%">
+      <tr>
+        <td width="15%"></td>
+        <td width="10%" class="headerCovTableHead">Hit</td>
+        <td width="10%" class="headerCovTableHead">Total</td>
+        <td width="15%" class="headerCovTableHead">Coverage</td>
+      </tr>
+      <tr>
+        <td class="headerItem">Lines:</td>
+        <td class="headerCovTableEntry">2067</td>
+        <td class="headerCovTableEntry">2809</td>
+        <td class="headerCovTableEntryLo">73.6 %</td>
+      </tr>
+      <tr>
+        <td class="headerItem">Functions:</td>
+        <td class="headerCovTableEntry">189</td>
+        <td class="headerCovTableEntry">223</td>
+        <td class="headerCovTableEntryMed">84.8 %</td>
+      </tr>
+      <tr>
+        <td class="headerItem">Branches:</td>
+        <td class="headerCovTableEntry">621</td>
+        <td class="headerCovTableEntry">1213</td>
+        <td class="headerCovTableEntryLo">51.2 %</td>
+      </tr>
+    </table>
+
+  </div>
+
+  <div class="col-md-8">
+
+    <h3>Current view: <small>top level</small></h3>
+
+    <table width="100%" cellpadding=1 cellspacing=1 border=0>
+
+      <tr>
+        <td width="44%"></td>
+        <td width="8%"></td>
+        <td width="8%"></td>
+        <td width="8%"></td>
+        <td width="8%"></td>
+        <td width="8%"></td>
+        <td width="8%"></td>
+        <td width="8%"></td>
+      </tr>
+
+      <tr>
+        <td class="tableHead">Directory </td>
+        <td class="tableHead" colspan=3>Line Coverage </td>
+        <td class="tableHead" colspan=2>Functions </td>
+        <td class="tableHead" colspan=2>Branches </td>
+      </tr>
+      <tr>
+        <td class="coverFile"><a href="/cov_kernel/src_um.html">src/_um</a></td>
+        <td class="coverBar" align="center">
+          <table border=0 cellspacing=0 cellpadding=1><tr><td class="coverBarOutline"><img src="/dist/img/emerald.png" width=91 height=10 alt="91.2%"><img src="/dist/img/snow.png" width=9 height=10 alt="91.2%"></td></tr></table>
+        </td>
+        <td class="coverPerHi">91.2&nbsp;%</td>
+        <td class="coverNumHi">187 / 205</td>
+        <td class="coverPerMed">87.9&nbsp;%</td>
+        <td class="coverNumMed">29 / 33</td>
+        <td class="coverPerMed">81.2&nbsp;%</td>
+        <td class="coverNumMed">65 / 80</td>
+      </tr>
+      <tr>
+        <td class="coverFile"><a href="/cov_kernel/src_fs.html">src/fs</a></td>
+        <td class="coverBar" align="center">
+          <table border=0 cellspacing=0 cellpadding=1><tr><td class="coverBarOutline"><img src="/dist/img/ruby.png" width=49 height=10 alt="48.6%"><img src="/dist/img/snow.png" width=51 height=10 alt="48.6%"></td></tr></table>
+        </td>
+        <td class="coverPerLo">48.6&nbsp;%</td>
+        <td class="coverNumLo">240 / 494</td>
+        <td class="coverPerLo">66.7&nbsp;%</td>
+        <td class="coverNumLo">22 / 33</td>
+        <td class="coverPerLo">27.5&nbsp;%</td>
+        <td class="coverNumLo">56 / 204</td>
+      </tr>
+      <tr>
+        <td class="coverFile"><a href="/cov_kernel/src_kern.html">src/kern</a></td>
+        <td class="coverBar" align="center">
+          <table border=0 cellspacing=0 cellpadding=1><tr><td class="coverBarOutline"><img src="/dist/img/amber.png" width=78 height=10 alt="77.7%"><img src="/dist/img/snow.png" width=22 height=10 alt="77.7%"></td></tr></table>
+        </td>
+        <td class="coverPerMed">77.7&nbsp;%</td>
+        <td class="coverNumMed">1640 / 2110</td>
+        <td class="coverPerMed">87.9&nbsp;%</td>
+        <td class="coverNumMed">138 / 157</td>
+        <td class="coverPerLo">53.8&nbsp;%</td>
+        <td class="coverNumLo">500 / 929</td>
+      </tr>
+    </table>
+
+  </div>
+
+</div>
