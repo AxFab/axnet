@@ -33,6 +33,7 @@
 # Add all possible source files
 !*.js
 !*.json
+!*.css
 !*.html
 
 # -------------------------------------------------------
