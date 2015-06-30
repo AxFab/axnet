@@ -1,0 +1,29 @@
+#{extends '/template_page.html' /}
+#{set title:'Debug' /}
+
+<script type="text/javascript">
+  
+var send = function () {
+  var val = document.getElementById('data-box').value
+
+  var xmlhttp = new XMLHttpRequest ();
+  xmlhttp.open("POST","/service/update", true);
+  xmlhttp.send(val);
+  xmlhttp.onreadystatechange = function () {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+      document.getElementById('req-log').innerHTML = xmlhttp.responseText;
+    }
+  }
+}
+
+window.onload = function () {
+  document.getElementById('data-post').onclick = send
+}
+
+</script>
+  
+<textarea id="data-box">
+</textarea>
+<a id="data-post" class="btn btn-primary">POST</a>
+<h3>Response: </h3>
+<div class="req-log"></div>

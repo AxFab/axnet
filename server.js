@@ -29,6 +29,11 @@ app.use('/node_modules', Server.static(__dirname + '/node_modules'))
 // app.post('/data', Server.basicAuth(auth))
 // app.post('/data', Server.store(__dirname + '/data'))
 app.post('/app', Server.service(axnet.MailService))
+app.post('/service/update', function (req, res) {
+  console.log ('UPDATE: ', req.body)
+  res.writeHead(200, { })
+  res.end('ACK')
+})
 
 // *.html pages (also handle directories)
 app.use('/admin', Server.basicAuth(auth))
