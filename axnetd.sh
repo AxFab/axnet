@@ -74,6 +74,7 @@ stop () {
 update () {
   git pull origin master
   git clean -f
+  chmod 755 axnetd.sh
 }
 
 # ---------------------------------------------------------------------------
@@ -116,6 +117,7 @@ case "$1" in
         exit 1
     fi
     start
+  ;;
 
   status)
     if is_running; then

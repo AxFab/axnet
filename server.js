@@ -30,17 +30,16 @@ app.use('/node_modules', Server.static(__dirname + '/node_modules'))
 // app.post('/data', Server.store(__dirname + '/data'))
 app.post('/app', Server.service(axnet.MailService))
 app.post('/service/update', function (req, res) {
-  console.log ('UPDATE: ', req.body)
-  exec('/srv/axnet/axnetd.sh update', function (error, stdout, stderr) {
-
-    if (error !== null) {
-      console.error('exec error: ' + error);
-    }
-    console.log(stdout);
-    console.error(stderr);
-  })
+  console.log ('UPDATE SERVER')
   res.writeHead(200, { })
   res.end('ACK')
+  exec('/srv/axnet/axnetd.sh update', function (error, stdout, stderr) {
+    if (error != null) {
+      console.error('exec error: ' + error);
+      console.log(stdout);
+      console.error(stderr);
+    }
+  })
 })
 
 // *.html pages (also handle directories)
