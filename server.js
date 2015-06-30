@@ -5,8 +5,8 @@ console.log('Initializing...')
 var axnet = require('axnet'),
     markup = require('html-markup')
     Server = axnet.WebServer, 
-    app = new Server()
-
+    app = new Server(),
+    exec = require('child_process').exec
 
 
 
@@ -31,6 +31,14 @@ app.use('/node_modules', Server.static(__dirname + '/node_modules'))
 app.post('/app', Server.service(axnet.MailService))
 app.post('/service/update', function (req, res) {
   console.log ('UPDATE: ', req.body)
+  exec('/srv/axnet/axnetd.sh update', function (error, stdout, stderr) {
+
+    if (error !== null) {
+      console.error('exec error: ' + error);
+    }
+    console.log(stdout);
+    console.error(stderr);
+  })
   res.writeHead(200, { })
   res.end('ACK')
 })
