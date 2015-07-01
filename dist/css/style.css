@@ -32,3 +32,6 @@ footer > div > div > div { text-align: left; padding:60px; }
 .ico24 { width: 24px; height: 24px; }
 .ico16 { width: 16px; height: 16px; }
 
+.bdg-lvl1 { background-color: rgb(240, 160, 96) !important }
+.bdg-lvl2 { background-color: rgb(160, 10, 10) !important }
+.bdg-lvl3 { background-color: rgb(20, 20, 20) !important }
