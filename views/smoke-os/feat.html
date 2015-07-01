@@ -1,0 +1,98 @@
+#{extends '/template_page.html' /}
+#{set title:'SmokeOS kernel' /}
+#{set menu:'feature' /}
+
+<script type="text/javascript" src="/dist/lib/http.js"></script>
+<script type="text/javascript" src="/dist/lib/jsonrpc.js"></script>
+<script type="text/javascript"></script>
+
+
+<div class="row">
+
+#{include '/smoke-os/menu.html' /}
+
+  <div class="col-md-10">
+
+
+    <div class="row">
+
+      <div class="col-md-4">
+        <h3>Basic characteristics</h3>
+        <p>SmokeOS kernel is build in <b>C and assembly</b> and design as a <b>monolithic kernel</b> architecture.</p>
+        <p>SmokeOS system is licensed under <b>Affero GPL</b>.
+        <p>The system is multitask, multiprocessor, ...</p>
+        <p>This system is build only for <b>i386</b> architecture yet.</p>
+      </div>
+
+      <div class="col-md-4">
+        <h3>Processor Architectures</h3>
+        <p><b>x86</b></p>
+        <p>ILP32 - SMP up to 32 CPUs<br/>MMU up to 4Gb<br/>No 2D/3D Accel.</p>
+        <dl>
+          <!-- <dt>amd64<dt> <dd>LP64 - N/A.</dd>
+          <dt>arm32<dt> <dd>ILP32 - N/A.</dd>
+          <dt>x86<dt> <dd>ILP32 - SMP up to 32 CPUs ; MMU up to 4Gb ; No 2D/3D Accel.</dd>
+          <dt>ia64<dt> <dd>LP64 - N/A.</dd> -->
+        </dl> 
+      </div>
+
+      <div class="col-md-4">
+        <h3>Filesystem support</h3>
+        <dl>
+          <dt>TMPFS<dt> <dd>Non-persistant file system in RAM.</dd>
+          <dt>ATA</dt> <dd>Parrallel ATA and ATAPI using PIO.</dd>
+          <dt>ISO</dt> <dd>CD-ROM using ISO 9660 file system.</dd>
+          <dt>GPT</dt> <dd>Driver for MBR and GPT disc partition.</dd>
+          <dt>FAT</dt> <dd>File system for FAT16, FAT 32 (read-only).</dd>
+        </dl> 
+      </div>
+
+    </div>
+
+<!-- 
+    <div class="row">
+
+      <div class="col-md-12">  
+        <h2>Design comparaison</h2>
+      </div>
+      <div class="col-md-6">  
+        <p><b>Create processes:</b> There is two way to create new process. UNIX choose the fork mechanism which clone the current thread and then, most of the time, load a new program image. Windows kernel however choose to recreate everything from nothing. General idea is that forking is faster but recreate all build cleaner tasks. Smoke kernel don't used the fork mechanisms because we reach </p>
+      </div>
+      <div class="col-md-6">  
+        <p><b>Serial terminals (TTY):</b> This concept exist on UNIX to gain compatibility with old teltext hardware which is completly outdated nowaday. Linux try simplify this awfull concept but mostly by implementing new feature over it, which lead to buckload code. On SmokeOS this concept have been abandonned but can be replaced by a specific driver. </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">  
+        <p><b>No-Copy driver:</b> I admit I don't know exaclty how file system layer are implemented on other system but in SmokeOS we avoid to copy data. When reading a file, the system make a request on the file system, which request the volume and then the physical drive. If possible the page from a file is the exact same as the one from block file.</p>
+      </div>
+      <div class="col-md-6"> 
+        <p><b>Graphics:</b> The X library is realy old and even Linux is moved away. SmokeOS design its own compositing display server. Windows managment are handle by the kernel, along with global drawing methods. Note that every strings are encoded on UTF-8.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6"> 
+        <p><b>POSIX file support:</b> On UNIX the virtual file system implement several key routines which are: <em>getattr, readlink, mknod, mkdir, unlink, rmdir, symlink, rename, linkm chmod, chown, truncate, open, read, write, statfs, flush, release, fsync, setxattr, getxattr, listxattr, removexattr, opendir, readdir, releasedir, fsyncdir, init, destroy, access, create, ftruncate, fgetattr, lock, utimes, bmap, ioctl, poll, write_buf, read_buf, flock, allocate</em>. Alls thoses methods are implemented by the file system driver. On SmokeOs most of the treatment are handle by the kernel itself in order to simplify driver implementation.</p>
+      </div>
+      <div class="col-md-6"> 
+        <p><b>Deamons:</b> On UNIX a deamon is usualy a program that clone itself, the program started by the command line end while the child process stay alive. On Window such system doesn't exist and services as there called must be embed on another process named 'svhost'. On SmokeOS the kernel provide an interface for the process to be register as a service. Several consequence are possible, we can request a user confirmation, store the process on a new session (blocked unused kernel feature can improve thrusting score). </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6"> 
+        <p><b>Legacy API burden:</b> If there is one thing that I hate and that cause a lot of probleme on software development is API retro-compatibility. For exemple linux avoid create new syscalls as there number are limited and must remain eternally. SmokeOs doesn't ....</p>
+      </div>
+      <div class="col-md-6"> 
+        <p><b>Security consideration:</b> Every task contains thrusting information. A process using the network stack is not allow to modify system information. User managment support ACL. Note that system user is unavailable from a end-user.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6"> 
+        <p><b>Memory managment:</b> Kernel use pagination. Page are accesible from an indexed bitmap. Object on the kernel are allocated on a multi-area heap allocator. Shared-memory use copy-on-write.</p>
+      </div>
+    </div>
+ -->
+
+  </div>
+</div>
+
