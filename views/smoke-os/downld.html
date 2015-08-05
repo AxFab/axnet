@@ -1,0 +1,34 @@
+#{ extends '/template.html' /}
+#{ set title:'SmokeOS' /}
+#{ set menu:'dw' /}
+
+
+<div class="row">
+
+  <div class="col-md-12">
+    <h1>SmokeOS <small>Download</small></h1>
+  </div>
+
+  #{include '/smoke-os/mn.html' /}
+
+</div>
+
+<div class="row">
+
+  <div class="col-md-6">
+    <p>The kernel is available as a ELF file (you can boot on it using Grub).</p>
+    <p>However the best way to test the kernel is to use the <b>ISO image</b> which can be tested on any x86 virtual machine.</p>
+    <p>Note that the current version is updated from time to time but correspond only to a development snapshot.</p>
+  </div>
+
+  <div class="col-md-6">
+    <a href="" class="btn btn-success pull-right">
+      <div>
+        <i class="fa fa-download fa-back"></i>
+        <h4>Download</h4>
+        <em>Development ISO image</em>
+      </div>
+    </a>
+  </div>
+
+</div>

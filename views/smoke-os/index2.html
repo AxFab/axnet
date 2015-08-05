@@ -1,32 +1,29 @@
-#{ extends '/template.html' /}
-#{ set title:'SmokeOS' /}
-#{ set menu:'ov' /}
+#{extends '/template_page.html' /}
+#{set title:'SmokeOS kernel' /}
+#{set menu:'overview' /}
+
+<script type="text/javascript" src="/dist/lib/http.js"></script>
+<script type="text/javascript" src="/dist/lib/jsonrpc.js"></script>
+<script type="text/javascript"></script>
+
 
 <div class="row">
 
-  <div class="col-md-12">
-    <h1>SmokeOS <small>Overview</small></h1>
-  </div>
-
-  #{include '/smoke-os/mn.html' /}
-  
-</div>
-
-<div class="row">
+#{include '/smoke-os/menu.html' /}
 
   <div class="col-md-10">
 
-    <h2>Overview</h2>
+    <h2>Overview <small><span class="badge bdg-lvl1">Novice</span></small></h2>
 
-    <p>A few years ago, I started a crazy project. I decided to start writing my own kernel. At the time I didn't have much knowledge of such system so I start learning a lot about system and harware principes. I already had strong skills in software development but this project really improve my knowledge and allow me to re-learn everything from a different point of view.</p>
-<!-- 
+    <p class="lead">A few years ago, I started a crazy project. I decided to start writing my own kernel. At the time I didn't have much knowledge of such system so I start learning a lot about system and harware principes. I already had strong skills in software development but this project really improve my knowledge and allow me to re-learn everything from a different point of view.</p>
+
     <hr/>
 
-    <h2>Features</h2>
+    <h2>Features <small><span class="badge bdg-lvl2">Initiated</span></small></h2>
 
-    <p class="lead">A got scheduler, file system, a driver interface. Memory management allow mmap, heap.</p> -->
+    <p class="lead">A got scheduler, file system, a driver interface. Memory management allow mmap, heap.</p>
 
-   <!--  <p>Syscalls implemented:
+    <p>Syscalls implemented:
       <ul>
         <li><b>sys_exit</b>() &mdash; Quit the program and abort all related thread <em>(implemented &amp; tested)</em></li>
         <li><b>sys_exec</b>() &mdash; Start a new process <em>(basic implementation)</em></li>
@@ -39,7 +36,7 @@
         <li><b>sys_close</b>() &mdash; Release a process resource <em>(implemented)</em></li>
         <li><b>sys_pinfo</b>() &mdash; Load information about a process <em>(partial implementation)</em></li>
       </ul>
-    </p> -->
+    </p>
 
 
   </div>

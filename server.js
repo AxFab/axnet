@@ -21,7 +21,7 @@ var auth = {
 }
 
 // Public static directories
-app.use('/favicon.ico', Server.static(__dirname + '/dist'))
+app.use('/favicon.ico', Server.static(__dirname + '/dist/favicon.ico'))
 app.use('/dist', Server.static(__dirname + '/dist'))
 app.use('/node_modules', Server.static(__dirname + '/node_modules'))
 

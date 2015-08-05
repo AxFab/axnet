@@ -1,0 +1,36 @@
+#{extends '/template_page.html' /}
+#{set title:'SmokeOS kernel' /}
+#{set menu:'support' /}
+
+<script type="text/javascript" src="/dist/lib/http.js"></script>
+<script type="text/javascript" src="/dist/lib/jsonrpc.js"></script>
+<script type="text/javascript"></script>
+
+
+<div class="row">
+
+#{include '/smoke-os/menu.html' /}
+
+  <div class="col-md-10">
+
+
+    <div class="row">
+
+      <div class="col-md-12">
+        <h2>Frequently Asked Questions</h2>
+        <p><b>Q: Is smoke-kernel UNIX-compatible?</b><br/>
+          <b>A:</b> I think I will defined this kernel as 'mostly compatible'. Because ton of free programs are developed for UNIX system. It would be silly to throw them away, however smoke-os is not meant to be a UNIX system. As such, I put an effort to make such program working on my OS, but compatibility is never garanted and even if it's working, it might not be really optimized against this new platform.</p>
+
+        <p><b>Q: Why named it 'Smoke'?</b><br/>
+          <b>A:</b> I'm particulary bad at naming things. I looked for a short name, easy to remember, if possible a noun that are used commonly (like apple or windows...). I choose Smoke, because SteamOS is already taken and because I want to build a really light operting system, that are persistant when needed, but can quickly desapears from user eyes.</p>
+
+        <p><b>Q: Which application can I use on SmokeOS?</b><br/>
+          <b>A:</b> Sadly not much. SmokeOS is a hobby more than a serious systems. I start it for learning purpose and I continue mostly for experimental purpose. Never the less, I hop that some day it will become stable and big enough to be more than this. <br/>
+          I will try to put quickly an application/packages store for my operating system.</p>
+      </div>
+ 
+    </div>
+
+  </div>
+</div>
+

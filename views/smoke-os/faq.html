@@ -1,36 +1,61 @@
-#{extends '/template_page.html' /}
-#{set title:'SmokeOS kernel' /}
-#{set menu:'support' /}
-
-<script type="text/javascript" src="/dist/lib/http.js"></script>
-<script type="text/javascript" src="/dist/lib/jsonrpc.js"></script>
-<script type="text/javascript"></script>
-
+#{ extends '/template.html' /}
+#{ set title:'SmokeOS' /}
+#{ set menu:'fq' /}
 
 <div class="row">
 
-#{include '/smoke-os/menu.html' /}
+  <div class="col-md-12">
+    <h1>SmokeOS <small>FAQ</small></h1>
+  </div>
 
-  <div class="col-md-10">
+  #{include '/smoke-os/mn.html' /}
 
+  <div class="col-md-12">
+    <h2>Frequently Asked Questions</h2>
+    <p><b>Q: Is smoke-kernel UNIX-compatible?</b><br/>
+      <b>A:</b> I think I will defined this kernel as 'mostly compatible'. Because ton of free programs are developed for UNIX system. It would be silly to throw them away, however smoke-os is not meant to be a UNIX system. As such, I put an effort to make such program working on my OS, but compatibility is never garanted and even if it's working, it might not be really optimized against this new platform.</p>
 
-    <div class="row">
+    <p><b>Q: Why named it 'Smoke'?</b><br/>
+      <b>A:</b> I'm particulary bad at naming things. I looked for a short name, easy to remember, if possible a noun that are used commonly (like apple or windows...). I choose Smoke, because SteamOS is already taken and because I want to build a really light operting system, that are persistant when needed, but can quickly desapears from user eyes.</p>
 
-      <div class="col-md-12">
-        <h2>Frequently Asked Questions</h2>
-        <p><b>Q: Is smoke-kernel UNIX-compatible?</b><br/>
-          <b>A:</b> I think I will defined this kernel as 'mostly compatible'. Because ton of free programs are developed for UNIX system. It would be silly to throw them away, however smoke-os is not meant to be a UNIX system. As such, I put an effort to make such program working on my OS, but compatibility is never garanted and even if it's working, it might not be really optimized against this new platform.</p>
-
-        <p><b>Q: Why named it 'Smoke'?</b><br/>
-          <b>A:</b> I'm particulary bad at naming things. I looked for a short name, easy to remember, if possible a noun that are used commonly (like apple or windows...). I choose Smoke, because SteamOS is already taken and because I want to build a really light operting system, that are persistant when needed, but can quickly desapears from user eyes.</p>
-
-        <p><b>Q: Which application can I use on SmokeOS?</b><br/>
-          <b>A:</b> Sadly not much. SmokeOS is a hobby more than a serious systems. I start it for learning purpose and I continue mostly for experimental purpose. Never the less, I hop that some day it will become stable and big enough to be more than this. <br/>
-          I will try to put quickly an application/packages store for my operating system.</p>
-      </div>
- 
-    </div>
+    <p><b>Q: Which application can I use on SmokeOS?</b><br/>
+      <b>A:</b> Sadly not much. SmokeOS is a hobby more than a serious systems. I start it for learning purpose and I continue mostly for experimental purpose. Never the less, I hope that some day it will become stable and big enough to be more than this. <br/>
+      I will try to put quickly an application/packages store for my operating system.</p>
 
   </div>
-</div>
 
+  <div class="col-md-12">
+
+    <form>
+
+      <legend>Ask another question</legend>
+      <div class="collapsed">
+        <div class="form-group">
+          <label for="faq-name" class="col-sm-3 control-label">Name</label>
+          <div class="col-sm-9">
+            <input class="form-control" id="faq-name" placeholder="Name" type="text">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="faq-email" class="col-sm-3 control-label">Email</label>
+          <div class="col-sm-9">
+            <input class="form-control" id="faq-email" placeholder="Email" type="text">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Question</label>
+          <div class="col-sm-9">
+            <textarea class="form-control" name="faq-question" rows="2" cols="30" placeholder="Question"></textarea>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-sm-9">
+            <button type="submit" class="btn btn-primary btn-block">Submit question</button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+</div>

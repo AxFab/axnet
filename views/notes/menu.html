@@ -1,8 +1,13 @@
 
 <div class="col-md-2 hidden-xs hidden-sm">
   <ul class="nav nav-default nav-stacked nav-pills">
-    <li><a href="#"><h3>Blog</h3></a><li>
-    <li class="active"><a href="/notes/all.html"><i class="glyphicon glyphicon-th-list"></i> Projects</a></li>
+    <li><a href="/notes/all.html"><h3>Projects</h3></a><li>
+    <li class="#{get_if menu = 'npm':'active':''/}"><a href="/notes/npm.html"><i class="glyphicon glyphicon-th-list"></i> Npm Packages</a></li>
+    <li class="#{get_if menu = 'kernel':'active':''/}"><a href="/notes/kernel.html"><i class="glyphicon glyphicon-th-list"></i> Smoke Kernel</a></li>
+    <li class="#{get_if menu = 'axc':'active':''/}"><a href="/notes/axc.html"><i class="glyphicon glyphicon-th-list"></i> Stdc library - axc</a></li>
+    <li class="#{get_if menu = 'gozy':'active':''/}"><a href="/notes/gozy.html"><i class="glyphicon glyphicon-th-list"></i> Gozy</a></li>
+    <li class="#{get_if menu = 'amy':'active':''/}"><a href="/notes/amy.html"><i class="glyphicon glyphicon-th-list"></i> AmySuite</a></li>
+    <li class="#{get_if menu = 'logics':'active':''/}"><a href="/notes/logics.html"><i class="glyphicon glyphicon-th-list"></i> LogicGates</a></li>
     <li><hr/></li>
     <li><small style="color:#c2c2c2">...<br/>
       SmokeOS: (kernel, axc, gui, programs)<br/>

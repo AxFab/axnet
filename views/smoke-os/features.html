@@ -1,0 +1,38 @@
+#{ extends '/template.html' /}
+#{ set title:'SmokeOS' /}
+#{ set menu:'ft' /}
+
+<div class="row">
+
+  <div class="col-md-12">
+    <h1>SmokeOS <small>Features</small></h1>
+  </div>
+
+  #{include '/smoke-os/mn.html' /}
+  
+</div>
+
+<div class="row">
+
+  <div class="col-md-4">
+    <h3>Characteristics</h3>
+    <p>The kernel is build in <b>C and assembly</b> and design as a <b>monolithic kernel</b> architecture.</p>
+    <p>SmokeOS system is licensed under <b>Affero GPL</b>.</p>
+    <p>The system is multitask and multithread.</p>
+    <p>The kernel have CPU detection and use virtual memory.</p>
+  </div>
+
+  <div class="col-md-4">
+    <h3>File Systems &amp; Devices</h3>
+    <p>Device detected: <b>ATA, ATAPI</b>. Support of <b>MBR &amp; GPT</b> partitions.</p>
+    <p>File systems supported are: <b>ISO</b>, <b>FAT</b> and a basic <b>TMPFS</b> which is different from linux.</p>
+    <p>Other devices are <b>Keyboard</b> and a basic <b>framebuffer</b>.</p>
+  </div>
+
+  <div class="col-md-4">
+    <h3>Platform</h3>
+    <p>This system is build only for <b>i386</b> architecture yet.</p>
+    <p>I study how to run on <b>RaspberryPi</b> for my first <b>ARM</b> port.</p>
+    <p>There is a <b>Usermode</b> architecture supported that allow to simulate syscall to a kernel program. Those are used as functional tests (launch *.strace files).</p>
+  </div>
+</div>
