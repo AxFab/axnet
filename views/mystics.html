@@ -1,0 +1,386 @@
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Mystics</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <script type="text/javascript" src="/dist/js/mystics/web_compo.js"></script>
+  <script type="text/javascript" src="/dist/js/mystics/mystics.js"></script>
+  <script type="text/javascript" src="/dist/js/mystics/my_populas.js"></script>
+  <script type="text/javascript" src="/dist/js/mystics/my_unit.js"></script>
+  <script type="text/javascript" src="/dist/js/mystics/my_city.js"></script>
+  <script type="text/javascript" src="/dist/js/mystics/my_models.js"></script>
+  <script type="text/javascript">
+
+
+var groupStat = function(data, name) {
+  if (data.used > 0)
+    return data.count + ' ('+ (data.avail) +')' + ' / ' + data.max;
+  return data.count + ' / ' + data.max;
+}
+
+var populasStat = function (data, name) {
+  return groupStat(data.populas[name]);
+}
+
+var resx = function (data, name) {
+  var str = Math.floor(data.stock[name]);
+  if (data.prod[name] < data.conso[name])
+    str = '<font color="red">' + str + '</font>';
+  str = str + '<small> / ' + data.capac[name] + '</small>';
+  var sum = (data.prod[name] - data.conso[name]) * city.speed * 3600.0;
+  str += '<br/><small>' + sum.toFixed(2) + ' /h</small>'
+  return str
+}
+
+var level = function (data) {
+  var arr = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+  return arr[parseInt(data)];
+}
+
+var duration = function (data) {
+  if (data < 60) 
+    return data + ' sec'
+  return Math.floor(data / 60) + ' min ' + (data % 60) + ' sec'
+}
+var readyIn = function (data, name) {
+  return duration (data.readyAt - city.timer);
+}
+
+var upBuild = function (data, name) {
+  var str = ''
+
+  if (data.model.update) {
+    var mdlUp = city.allModels[data.model.update[0]]
+    if (mdlUp.canBuild) {
+      str += '<a class="btn btn-warning btn-xs" onclick="';
+      str += 'javascript:update(' + data.idx + ')"';
+      str += '>Up</a> ';
+  console.log (str)
+    }
+  }
+  return str;
+}
+
+var trainingBtn = function(data, name) {
+  if (!data.model.buildtime)
+    return '';
+  var sfx = (data.model.attack) ? '_s' : '_w';
+
+  var str = '<a class="btn btn-success btn-xs" onclick="';
+  str += 'javascript:train' + sfx + '(' + data.idx + ')"';
+  if (data.miss == 0)
+    str += ' disabled="disabled"';
+  str += '>+1</a> ';
+
+  str += '<a class="btn btn-danger btn-xs" onclick="';
+  str += 'javascript:less' + sfx + '(' + data.idx + ')"';
+  if (data.count == 0)
+    str += ' disabled="disabled"';
+  str += '>-1</a> ';
+
+  if (data.model.update) {
+    var mdlUp = city.allModels[data.model.update[0]]
+    if (mdlUp.canBuild) {
+      str += '<a class="btn btn-warning btn-xs" onclick="';
+      str += 'javascript:upgrade' + sfx + '(' + data.idx + ')"';
+      str += '>Up</a> ';
+    }
+  }
+
+  return str
+}
+
+var header = [
+  { name:'Name', data:'model.name' },
+  { name:'Lvl', data:'lvl', format:level },
+  { name:'#', data:'idx' },
+  { name:'Habitants', data:'residents', extract:populasStat },
+  { name:'Workers', data:'workers', extract:populasStat },
+  { name:'Soldiers', data:'soldiers', extract:populasStat },
+  { name:'.', extract:upBuild }
+]
+
+var header3 = [
+  { name:'Name', data:'model.name' },
+  { name:'Build time', data:'buildTime', format:duration },
+  // { name:'Ready at', data:'readyAt' },
+  { name:'Ready in', extract:readyIn },
+]
+
+var header2 = [
+  // { name:'Timer', data:'timer' },
+  { name:'Habitants', data:'residents', extract:populasStat },
+  { name:'Workers', data:'workers', extract:populasStat },
+  { name:'Soldiers', data:'soldiers', extract:populasStat },
+]
+
+var header4 = [
+  { name:'Cereals', data:'cereals', extract:resx },
+  { name:'Gold', data:'gold', extract:resx },
+  { name:'Wood', data:'wood', extract:resx },
+  { name:'Rock', data:'rock', extract:resx },]
+
+var header5 = [
+  { name:'Name', data:'model.name' },
+  { name:'#', data:'idx' },
+  { name:'Count', extract:groupStat },
+  { name:'.', extract:trainingBtn }
+]
+
+var goals = {
+  init: [ 's1', 's2' ],
+  s1: { 
+    check: function (city) { return city.populas.residents.count >= 15; },
+    success: function (city) { city.stock.gold += 10; city.stock.wood += 20; },
+    nexts: [ ],
+  },
+  s2: {
+    check: function (city) {
+      for (var i in city.units)
+        if (city.units[i].model.id === 'farm')
+          return true
+      return false;
+    },
+    success: function (city) { 
+      city.allModels.house.canBuild = true;
+      city.allModels.militia.canBuild = true;
+    },
+    nexts: [ 's3' ],
+  },
+  s3: {
+    check: function (city) { return city.populas.soldiers.count >= 2; },
+    success: function (city) {
+      city.allModels.cityhall.canBuild = true; 
+    },
+    nexts: [ 's4' ],
+  },
+  s4: {
+    check: function (city) { 
+      for (var i in city.units)
+        if (city.units[i].model.id === 'cityhall')
+          return true
+      return false; 
+    },
+    success: function (city) {
+      city.allModels.farm2.canBuild = true;
+      city.building.farm.max = 2;
+      city.building.sawmill.max = 2;
+    },
+    nexts: [ ],
+  }
+};
+
+var city = new MysticCity(MysticModels, goals);
+
+//city.stock.wood = 40
+//city.create('farm')
+city.stock.gold = 10
+city.stock.wood = 40
+city.stock.cereals = 25
+city.stock.rock = 10
+
+var fast = function() {
+  city.speed = 5;
+  city.ticks = 800;
+}
+
+var slow = function(i) {
+  if (!i)
+    i = 1
+  city.speed = i / 250;
+  city.ticks = i;
+}
+
+
+var gameLogs = function(name, args) {
+  var log = {
+    timer: city.timer,
+    name:name,
+    args:JSON.parse(JSON.stringify(args)),
+  };
+  // console.log (duration(city.timer), JSON.stringify(log));
+  // gameLogs.logs.push (log);
+}
+
+gameLogs.logs = []
+
+
+var create = function(name) {
+  gameLogs('create', arguments)
+  return city.create(name);
+}
+
+var train_w = function(idx) {
+  gameLogs('train_w', arguments)
+  var grpTarget = city.populas.workers.units[idx - 1];
+  return city.prepare(grpTarget, 1);
+}
+
+var train_s = function(idx) {
+  gameLogs('train_s', arguments)
+  var grpTarget = city.populas.soldiers.units[idx - 1];  
+  return city.prepare(grpTarget, 1);
+}
+
+var less_w = function(idx) {
+  var grpTarget = city.populas.workers.units[idx - 1];  
+  return city.less(grpTarget, 1)
+}
+
+var less_s = function(idx) {
+  var grpTarget = city.populas.soldiers.units[idx - 1];  
+  return city.less(grpTarget, 1)
+}
+
+var update = function(idx) {
+  gameLogs('update', arguments)
+  var unit = city.units[idx - 1];
+  return city.update(unit, 0);
+}
+
+var debug = [
+  function () {
+    city.ticks = 500
+  },
+  function () {
+  },
+  function () {
+    work(1)
+    work(1)
+    fast()
+    create ('sawmill')
+    create ('house')
+  }, function () {
+    work(2)
+  }, function () {
+    work(2)
+  }, function () {
+    work(1)
+  }, function () {
+    create ('militia')
+  }, function () {
+    work(2)
+  }, function () {
+    update(1)
+    train(1)
+    train(1)
+    train(1)
+    train(1)
+  }, function () {
+  }, function () {
+    work(1)
+  }, function () {
+    work(1)
+  }, function () {
+    work(1)
+    work(1)
+    work(1)
+  }
+]
+
+var dbg = false;
+
+window.onload = function () {
+
+  var idx = 0
+  setInterval(function () {
+
+    if (dbg) {
+      if (debug[idx])
+        debug[idx]();
+      ++idx;
+    }
+
+    city.run()
+
+    document.getElementById('info').innerHTML = WC.buildTable(header, city.units)
+    document.getElementById('info3').innerHTML = WC.buildTable(header3, city.building.units)
+    document.getElementById('info8').innerHTML = WC.buildTable(header3, city.trained.units)
+    document.getElementById('info2').innerHTML = WC.buildTable(header2, [city])
+    document.getElementById('info4').innerHTML = WC.buildTable(header4, [city])
+    document.getElementById('info5').innerHTML = WC.buildTable(header5, city.populas.soldiers.units)
+        document.getElementById('info6').innerHTML = WC.buildTable(header5, city.populas.workers.units)
+        document.getElementById('info7').innerHTML = WC.buildTable(header5, city.populas.residents.units)
+
+    var button = function (name, panel) {
+      var btn = document.createElement('a')
+      btn.className = 'btn btn-info btn-xs'
+      var model = city.allModels[name]
+      if (!model.canBuild)
+        return;
+      btn.innerHTML = model.name
+      btn.onclick = function () {
+        create(name);
+      }
+      panel.appendChild(btn)
+      var sp = document.createElement('span')
+      sp.innerHTML = ' '
+      panel.appendChild(sp)
+    }
+
+    document.getElementById('row1').innerHTML = ''
+    var panel = document.getElementById('row1')
+    for (var k in city.allModels) {
+      button(k, panel)
+    }
+    // document.getElementById('row1').appendChild(' ')
+  }, 1000)
+}
+
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h3>Resources</h3>
+        <table id="info4" class="table table-condensed table-hover">
+        </table>
+      </div>
+      <div class="col-md-6">
+        <h3>City</h3>
+        <table id="info2" class="table table-condensed table-hover">
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <h3>Buildings</h3>
+        <table id="info" class="table table-condensed table-hover">
+        </table>
+      </div>
+      <div class="col-md-6">
+        <h3>Building...</h3>
+        <table id="info3" class="table table-condensed table-hover">
+        </table>
+        <h3>Training...</h3>
+        <table id="info8" class="table table-condensed table-hover">
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <h3>Residents</h3>
+        <table id="info7" class="table table-condensed table-hover">
+        </table>
+      </div>
+      <div class="col-md-4">
+        <h3>Workers</h3>
+        <table id="info6" class="table table-condensed table-hover">
+        </table>
+      </div>
+      <div class="col-md-4">
+        <h3>Soldiers</h3>
+        <table id="info5" class="table table-condensed table-hover">
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12" id="row1">
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
+
