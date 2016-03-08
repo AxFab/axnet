@@ -45,6 +45,34 @@
     return xHtml
   }
 
+  WC.widget = function(panel, data) {
+    var text = panel.innerHTML
+    var rex = /\{data.([a-zA-Z0-9_.]+)\}/;
+    for (;;) {
+      var m = rex.exec(text);
+      if (!m) 
+        break;
+
+
+      var val = WC.objGet(data, m[1])
+      text = m.input.substr(0, m.index) +  val + m.input.substr(m.index + m[0].length)
+    }
+    panel.innerHTML = text;
+    panel.style.display = 'block'
+  }
+
+
+  WC.autofillTable = function (tables) {
+    for (var i=0; i < tables.length; ++i) {
+      var tbl = tables[i];
+      var html = WC.buildTable(tbl.columns, tbl.data);
+      var panel = document.getElementById(tbl.name);
+      panel.innerHTML = html;
+      panel.className = 'table table-condensed table-hover';
+    }
+  }
+
+
   root.WC = WC; 
 
 }).call(this)

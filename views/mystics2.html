@@ -24,17 +24,15 @@ var groupStat = function(data, name) {
 }
 
 var populasStat = function (data, name) {
-  if (data.populas && data.populas[name])
-    return groupStat(data.populas[name]);
-  return '-'
+  return groupStat(data.populas[name]);
 }
 
 var resx = function (data, name) {
   var str = Math.floor(data.stock[name]);
-  if (data.conso[name] > 0)
+  if (data.prod[name] < data.conso[name])
     str = '<font color="red">' + str + '</font>';
   str = str + '<small> / ' + data.capac[name] + '</small>';
-  var sum = data.conso[name] * city.speed * -3600.0;
+  var sum = (data.prod[name] - data.conso[name]) * city.speed * 3600.0;
   str += '<br/><small>' + sum.toFixed(2) + ' /h</small>'
   return str
 }
@@ -50,14 +48,14 @@ var duration = function (data) {
   return Math.floor(data / 60) + ' min ' + (data % 60) + ' sec'
 }
 var readyIn = function (data, name) {
-  return duration (data.ready - Mystics.epoch);
+  return duration (data.readyAt - city.timer);
 }
 
 var upBuild = function (data, name) {
   var str = ''
 
   if (data.model.update) {
-    var mdlUp = city.models[data.model.update[0]]
+    var mdlUp = city.allModels[data.model.update[0]]
     if (mdlUp.canBuild) {
       str += '<a class="btn btn-warning btn-xs" onclick="';
       str += 'javascript:update(' + data.idx + ')"';
@@ -86,7 +84,7 @@ var trainingBtn = function(data, name) {
   str += '>-1</a> ';
 
   if (data.model.update) {
-    var mdlUp = city.models[data.model.update[0]]
+    var mdlUp = city.allModels[data.model.update[0]]
     if (mdlUp.canBuild) {
       str += '<a class="btn btn-warning btn-xs" onclick="';
       str += 'javascript:upgrade' + sfx + '(' + data.idx + ')"';
@@ -99,8 +97,8 @@ var trainingBtn = function(data, name) {
 
 var header = [
   { name:'Name', data:'model.name' },
-  { name:'Lvl', data:'level', format:level },
-  { name:'#', data:'no' },
+  { name:'Lvl', data:'lvl', format:level },
+  { name:'#', data:'idx' },
   { name:'Habitants', data:'residents', extract:populasStat },
   { name:'Workers', data:'workers', extract:populasStat },
   { name:'Soldiers', data:'soldiers', extract:populasStat },
@@ -109,7 +107,7 @@ var header = [
 
 var header3 = [
   { name:'Name', data:'model.name' },
-  { name:'Build time', data:'buildtime', format:duration },
+  { name:'Build time', data:'buildTime', format:duration },
   // { name:'Ready at', data:'readyAt' },
   { name:'Ready in', extract:readyIn },
 ]
@@ -149,15 +147,15 @@ var goals = {
       return false;
     },
     success: function (city) { 
-      city.models.house.canBuild = true;
-      city.models.militia.canBuild = true;
+      city.allModels.house.canBuild = true;
+      city.allModels.militia.canBuild = true;
     },
     nexts: [ 's3' ],
   },
   s3: {
     check: function (city) { return city.populas.soldiers.count >= 2; },
     success: function (city) {
-      city.models.cityhall.canBuild = true; 
+      city.allModels.cityhall.canBuild = true; 
     },
     nexts: [ 's4' ],
   },
@@ -169,7 +167,7 @@ var goals = {
       return false; 
     },
     success: function (city) {
-      city.models.farm2.canBuild = true;
+      city.allModels.farm2.canBuild = true;
       city.building.farm.max = 2;
       city.building.sawmill.max = 2;
     },
@@ -245,35 +243,84 @@ var update = function(idx) {
   return city.update(unit, 0);
 }
 
-
-city = Mystics.City({
-  stock:{ cereals:25, gold:20, wood:40, rock:15 },
-  capac:{ cereals:50, gold:50, wood:50, rock:25 },
-  models: MysticModels,
-})
-
-
-var tables = [
-  { name:'info', columns:header, data:city.buildings },
-  { name:'info2', columns:header2, data:[city] },
-  { name:'info4', columns:header4, data:[city.resx] },
-
-  { name:'info3', columns:header3, data:city.archi.currents },
-  { name:'info8', columns:header3, data:city.trainer.currents },
-{ name:'info5', columns:header5, data:city.populas.soldiers.units },
-  { name:'info6', columns:header5, data:city.populas.workers.units },
-  { name:'info7', columns:header5, data:city.populas.residents.units },
-  
+var debug = [
+  function () {
+    city.ticks = 500
+  },
+  function () {
+  },
+  function () {
+    work(1)
+    work(1)
+    fast()
+    create ('sawmill')
+    create ('house')
+  }, function () {
+    work(2)
+  }, function () {
+    work(2)
+  }, function () {
+    work(1)
+  }, function () {
+    create ('militia')
+  }, function () {
+    work(2)
+  }, function () {
+    update(1)
+    train(1)
+    train(1)
+    train(1)
+    train(1)
+  }, function () {
+  }, function () {
+    work(1)
+  }, function () {
+    work(1)
+  }, function () {
+    work(1)
+    work(1)
+    work(1)
+  }
 ]
 
+var dbg = false;
 
 window.onload = function () {
 
   var idx = 0
   setInterval(function () {
 
-    Mystics.epoch++;
+    if (dbg) {
+      if (debug[idx])
+        debug[idx]();
+      ++idx;
+    }
+
     city.run()
+
+    var tables = [
+      { name:'info', columns:header, data:city.units },
+      { name:'info2', columns:header2, data:[city] },
+      { name:'info4', columns:header4, data:[city] },
+
+      { name:'info3', columns:header3, data:city.building.units },
+      { name:'info8', columns:header3, data:city.trained.units },
+
+      { name:'info5', columns:header5, data:city.populas.soldiers.units },
+      { name:'info6', columns:header5, data:city.populas.workers.units },
+      { name:'info7', columns:header5, data:city.populas.residents.units },
+    ]
+
+    WC.autofillTable = function (tables) {
+      for (var i=0; i < tables.length; ++i) {
+        var tbl = tables[i];
+        var html = WC.buildTable(tbl.columns, tbl.data);
+        var panel = document.getElementById(tbl.name);
+        panel.innerHTML = html;
+        panel.className = 'table table-condensed table-hover';
+      }
+    }
+
     WC.autofillTable(tables)
 
 
@@ -281,22 +328,21 @@ window.onload = function () {
       var btn = document.createElement('a')
       btn.className = 'btn btn-info'// btn-xs'
       // data-toggle="tooltip" data-placement="left" title="Tooltip on left"
-      var model = city.models[name]
-      var bld = city.catalog[name]      
+      var model = city.allModels[name]
       btn.title = Mystics.costString(model.cost)
       $(btn).tooltip({ placement:'left'})
-      if (bld.limit == 0)
+      if (!model.canBuild)
         return;
       btn.innerHTML = model.name
       if (model.ico)
         btn.innerHTML = '<img src="../dist/img/mystics/'+model.ico+'.png" style="width:32; height:32" /> '+ btn.innerHTML;
       btn.onclick = function () {
-        city.archi.create(name);
+        create(name);
       }
       var check = city.canBuy(model)
       // console.log ('CK', check, model.name)
-      if (!check)
-        btn.className = 'btn'
+      // if (!check)
+      //   btn.className = 'btn'
       panel.appendChild(btn)
       var sp = document.createElement('span')
       sp.innerHTML = ' '
@@ -306,9 +352,14 @@ window.onload = function () {
     document.getElementById('row1').innerHTML = ''
     var panel = document.getElementById('row1')
 
-    for (var k in city.models) {
+    for (var k in city.allModels) {
       button(k, panel)
     }
+
+
+    
+
+    // WC.widget(document.getElementById('top'), city)
 
   }, 1000)
 }

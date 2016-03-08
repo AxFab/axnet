@@ -153,6 +153,21 @@
     return true;
   }
 
+  MysticCity.prototype.canBuy = function(model) {
+
+    // var model = this.allModels[name];
+    if (!model || model.canBuild === false)
+      return false;
+
+    model.id = name
+
+    for (var k in model.cost)
+      if (this.stock[k] < model.cost[k])
+        return false;
+
+    return true;
+  }
+
   MysticCity.prototype.create = function(name) {
 
     var model = this.allModels[name];

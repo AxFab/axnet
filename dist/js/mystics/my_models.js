@@ -12,9 +12,10 @@
 
 
   MysticModels.farm = MysticModels({
-    name:'Small Farm',
+    name:'Small Farm', ico:'01',
     buildtime: 30,
     canBuild: true,
+    limit: 2,
     cost: { wood:15, },
     prod: { cereals: 35, },
     capac: { cereals: 200, },
@@ -28,7 +29,7 @@
   });
 
   MysticModels.farm2 = MysticModels({
-    name:'Small Farm',
+    name:'Small Farm', ico:'01',
     isUpdate: true,
     buildtime: 90,
     cost: { wood:30, },
@@ -43,9 +44,10 @@
   });
 
   MysticModels.sawmill = MysticModels({
-    name:'Saw mill',
+    name:'Saw mill', ico:'02',
     buildtime: 30,
     canBuild: true,
+    limit: 2,
     cost: { wood:10, },
     prod: { wood: 12, },
     capac: { wood: 200, },
@@ -55,7 +57,7 @@
   });
 
   MysticModels.house = MysticModels({
-    name:'House',
+    name:'House', ico:'03',
     buildtime: 60,
     cost: { wood:15, },
     residents: [
@@ -64,7 +66,7 @@
   });
 
   MysticModels.militia = MysticModels({
-    name:'Militia',
+    name:'Militia', ico:'04',
     buildtime: 150,
     cost: { wood:20, gold:10 },
     soldiers: [
