@@ -1,0 +1,228 @@
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link href="/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href='/dist/css/open_sans.css' rel='stylesheet' />
+  <style>
+    * { font-family: 'Open Sans', sans-serif; }
+    .gs960 { width: 960px; margin:0px auto; }
+    h2 { background: #1010a6; color:#f8f8f8; padding:2px 5px; }
+    h2 small { color:#f8f8f8; padding:0px 10px; font-weight: lighter; }
+    h3 { background: gray; display: inline-block; width: 240px; height:32px; padding:2px 5px; position: relative; color:#f8f8f8; font-weight: lighter; font-style: italic; }
+    h3:before { width:0; height:0; position:absolute; left: 100%; border:16px solid transparent; content: " "; border-left-color:gray; }
+    div.well { border-top:0px; background: none;  }
+    div > h4 { color:#a6a6a6; border-bottom: 1px dashed #a6a6a6; clear:both; }
+    div > h4:last-child { color:#a6a6a6; border-top: 1px dashed #a6a6a6; border-bottom: none }
+    .large { font-size: 3em; float: left; }
+    .legend { margin:10px; float: left; display: inline; width:60%; }
+
+    h3.turquoise { background-color: #10a6a6 }
+    h3.turquoise:before { border-left-color: #10a6a6 }
+    h3.red { background-color: #a61010 }
+    h3.red:before { border-left-color: #a61010 }
+    h3.blue { background-color: #1010a6 }
+    h3.blue:before { border-left-color: #1010a6 }
+    h3.brown { background-color: #a66410 }
+    h3.brown:before { border-left-color: #a66410 }
+
+  </style>
+  <script type="text/javascript" src="/dist/js/jquery.min.js"></script>
+  <script type="text/javascript" src="/dist/js/jaks.js"></script>
+  <script type="text/javascript">
+    $(function() {
+
+      $.getJSON('/dist/sprint.json', function (sprint) {
+
+        sprint.capacity = 0;
+        for (var i=0; i<sprint.times.length; ++i) {
+          sprint.capacity += sprint.times[i];
+        }
+
+        sprint.pace_initial = sprint.capacity / sprint.commited;
+        sprint.pace_final = sprint.capacity / sprint.completed;
+        sprint.speed = sprint.completed / sprint.capacity * 8;
+        sprint.extra = Math.max(0, sprint.total - sprint.commited);
+        sprint.fails = Math.max(0, sprint.total - sprint.completed);
+
+
+
+        document.getElementById('sp_no').textContent = sprint.no;
+        document.getElementById('sp_team').textContent = sprint.team;
+        document.getElementById('sp_commit').textContent = sprint.commited;
+        document.getElementById('sp_completed').textContent = sprint.completed;
+        document.getElementById('sp_capacity0').textContent = (sprint.capacity / 8).toFixed(0);
+        document.getElementById('sp_capacity1').textContent = sprint.capacity;
+        document.getElementById('sp_capacity2').textContent = sprint.capacity;
+        document.getElementById('sp_pace_init').textContent = sprint.pace_initial.toFixed(2);
+        document.getElementById('sp_pace_final').textContent = sprint.pace_final.toFixed(2);
+        document.getElementById('sp_speed').textContent = sprint.speed.toFixed(2);
+        document.getElementById('sp_extra').textContent = sprint.extra;
+        document.getElementById('sp_addhours').textContent = (sprint.extra * sprint.pace_final).toFixed(0);
+        document.getElementById('sp_fails').textContent = sprint.fails;
+        document.getElementById('sp_fails_perc').textContent = (sprint.fails * 100 / sprint.commited).toFixed(0);
+
+        for (var i=0; i < sprint.stories.length; ++i) {
+          if (!sprint.stories[i].done)
+            continue;
+          var us = sprint.stories[i];
+          var html = '<p><b>#'+us.no+'</b> '+us.lbl+'</p>';
+          document.getElementById('sp_us_done').innerHTML += html;
+        }
+
+        for (var i=0; i < sprint.stories.length; ++i) {
+          if (sprint.stories[i].done)
+            continue;
+          var us = sprint.stories[i];
+          var html = '<p><b>#'+us.no+'</b> '+us.lbl+'</p>';
+          document.getElementById('sp_us_todo').innerHTML += html;
+        }
+
+        var data = [
+          ['', 'Normal', 'Real'],
+        ];
+
+        var bdown = 0
+        for (var i=0; i<sprint.times.length; ++i) {
+          bdown += sprint.times[i]
+          var estim = bdown / sprint.pace_initial;
+          data[i+1] = [i, sprint.commited - estim, sprint.burndown[i]];
+        }
+
+        new jaks.Chart('cvs_burndown', data, {
+          width:400, height:200, padding:{ left:0, top: 0, right:0, bottom: 0},
+          grid: {
+            x: {},
+            y1: {
+              min:0,
+              mark:'white-circle',
+              mark_width:4
+            },
+          }
+        });
+
+        var velocities = [
+          ['', 'Commitment', 'Real'],
+          [1, 1/1.91, 1/2.21 ],
+          [2, 1/2.31, 1/2.39 ],
+          [3, 1/2.35, 1/2.36 ],
+        ]
+
+        new jaks.Chart('cvs_velocity', velocities, {
+          width:400, height:200, padding:{ left:0, top: 0, right:0, bottom: 0},
+          plot: 'ClusteredArea',
+          grid: {
+            areaOpacity:0.5,
+            colors:['#a66410', '#d69440'],
+            x: {},
+            y1: {
+              min:0,
+              // mark:'white-circle',
+              // mark_width:4
+            },
+          }
+        });
+
+      }).fail(function () {
+        console.log ('Error', arguments)
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="gs960">
+    <div class="row">
+      <div class="col-sm-12">
+        <h2>Sprint <span id="sp_no">1</span> Overview <small id="sp_team"></small></h2>
+      </div>
+
+      <div class="col-sm-12">
+        <h3>The Stats</h3>
+        <div class="well">
+          <div class="row">
+
+            <div class="col-sm-4">
+              <h4>Commited</h4>
+              <span class="large" id="sp_commit">48</span>
+              <span class="legend">Estimate to <u id="sp_capacity1">440</u> hours of work with a pace of <u id="sp_pace_init">8.56</u> hours per points.</span>
+              <h4>Points</h4>
+            </div>
+
+            <div class="col-sm-4">
+              <h4>Delivered</h4>
+              <span class="large" id="sp_completed">12</span>
+              <span class="legend">With a pace of <u id="sp_pace_final">87.1</u> hours by points. <br/>Velocity: <u id="sp_speed">0.05</u> (pts/MD).</span>
+              <h4>Points</h4>
+            </div>
+
+            <div class="col-sm-4">
+              <h4>Capacity</h4>
+              <span class="large" id="sp_capacity2">440</span>
+              <span class="legend">The capacity of our team for this sprint.<br/><u id="sp_capacity0">55</u> MD (8h a day).</span>
+              <h4>Hours</h4>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+
+        <h3 class="blue">Stories Achieved</h3>
+        <div class="well text-success" id="sp_us_done">
+        </div>
+        
+        <h3 class="blue">Stories Not Achieved</h3>
+        <div class="well text-danger" id="sp_us_todo">
+        </div>
+        
+      </div>
+
+      <div class="col-sm-6">
+        
+        <h3 class="turquoise">The Burndown</h3>
+        <div class="well">
+          <canvas id="cvs_burndown"></canvas>
+        </div>
+
+        <h3 class="brown">Velocity By Sprint</h3>
+        <div class="well">
+          <canvas id="cvs_velocity"></canvas>
+        </div>
+
+      </div>
+
+      <div class="col-sm-12">
+        
+        <h3 class="red">The Distraction</h3>
+
+        <div class="well">
+          <div class="row">
+
+            <div class="col-sm-3">
+              <h4>Additional work</h4>
+              <span class="large" id="sp_extra">0</span>
+              <span class="legend">Estimate to <u id="sp_addhours">0</u> hours of work on the actual sprint pace.</span>
+              <h4>Points</h4>
+            </div>
+
+            <div class="col-sm-3">
+              <h4>Failed to deliver</h4>
+              <span class="large" id="sp_fails">3</span>
+              <span class="legend">Which represent <u id="sp_fails_perc">4</u>% of initial commitment.</span>
+              <h4>Points</h4>
+            </div>
+
+            <div class="col-sm-6">
+              <h4>Retrospective</h4>
+              <span class="legend">The capacity of our team for this sprint.<br/><u>55</u> MD (8h a day).</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

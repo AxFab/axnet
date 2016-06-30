@@ -1,0 +1,15 @@
+{
+  "no": 9,
+  "team": "Bravo",
+  "commited": 67,
+  "completed": 58,
+  "total": 68,
+  "capacity": 42,
+  "times": [0, 16, 12, 12, 16, 8, 16, 12, 12, 16, 8],
+  "burndown": [67, 63, 58, 48, 31, 27],
+  "stories": [
+    { "no": 5123, "lbl":"Create a new control.", "done":false },
+    { "no": 6713, "lbl":"Display a new control.", "done":true },
+    { "no": 4681, "lbl":"Create this awesome feature.", "done":false }
+  ]
+}
